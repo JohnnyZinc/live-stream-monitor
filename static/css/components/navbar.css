@@ -1,6 +1,6 @@
 /* 导航栏样式 */
 .navbar {
-    background: #f8f9fa !important;
+    background: var(--navbar-background) !important;
     /*box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);*/
 }
 
@@ -8,21 +8,31 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    color: #88ada6 !important;
+    color: var(--primary-color) !important;
 }
 
 .navbar-brand:hover {
-    color: #88ada6 !important;
+    color: var(--primary-color) !important;
 }
 
 .navbar-brand .bi {
-    color: #88ada6;
+    color: var(--primary-color);
 }
 
 /* 统一的二级菜单按钮样式 */
-#moreActionsDropdown {
+#moreActionsDropdown,
+#groupDropdown {
     font-size: 1rem;
     padding: 6px 12px;
+    background-color: var(--button-light);
+    color: var(--button-dark);
+    border: 1px solid var(--border-color);
+}
+
+#moreActionsDropdown:hover,
+#groupDropdown:hover {
+    background-color: var(--button-light);
+    color: var(--button-dark);
 }
 
 /* 自动更新按钮组样式 */
@@ -38,20 +48,66 @@
     border-radius: 0 0.375rem 0.375rem 0;
 }
 
-/* 下拉菜单项样式 */
+.btn-group .btn-success {
+    background-color: var(--success-button);
+    border-color: var(--success-button);
+    color: white;
+}
+
+.btn-group .btn-success:hover {
+    background-color: var(--success-button-hover);
+    border-color: var(--success-button-hover);
+}
+
+.btn-group .btn-success:focus {
+    box-shadow: 0 0 0 0.2rem rgba(123, 36, 255, 0.25);
+}
+
+/* 下拉菜单样式 */
+.dropdown-menu {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
 .dropdown-item {
     display: flex;
     align-items: center;
     gap: 8px;
+    color: var(--text-color);
+}
+
+.dropdown-item:hover {
+    background-color: var(--button-light);
+    color: var(--button-dark);
+}
+
+.dropdown-divider {
+    border-top: 1px solid var(--border-color);
 }
 
 /* 刷新指示器样式 */
 #refreshIndicator {
-    border-color: #007bff;
+    border-color: var(--primary-color);
     border-width: 2px;
 }
 
 /* Auto update status text */
 #autoUpdateStatus {
     white-space: nowrap;
+    color: var(--muted-text);
+}
+
+/* Theme toggle button */
+#themeToggle {
+    background-color: var(--button-light);
+    color: var(--button-dark);
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    padding: 6px 12px;
+}
+
+#themeToggle:hover {
+    background-color: var(--button-light);
+    color: var(--button-dark);
 }

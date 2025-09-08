@@ -1,6 +1,7 @@
 /* 直播间卡片 */
 .room-card {
-    background: white;
+    background: var(--card-background);
+    border: 1px solid var(--border-color);
     border-radius: 12px;
     overflow: hidden;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
@@ -14,4 +15,5 @@
 .room-card:hover {
     transform: translateY(-5px);
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    border-color: var(--primary-color);
 }

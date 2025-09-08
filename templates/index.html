@@ -25,18 +25,23 @@
                     <span class="visually-hidden">加载中...</span>
                 </div>
                 
-                <!-- Auto update status (right third) -->
-                <small id="autoUpdateStatus" class="text-muted me-2">自动更新已停止</small>
+                <!-- Auto update status icon (right third) -->
+                <i id="autoUpdateStatusIcon" class="bi bi-pause-circle text-muted me-2" title="自动更新已停止"></i>
                 
                 <!-- Group selection dropdown (right second) -->
                 <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="groupDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-light dropdown-toggle" type="button" id="groupDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-collection"></i> <span id="currentGroupName">全部关注</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="groupDropdown" id="groupMenu">
                         <!-- Groups will be populated dynamically -->
                     </ul>
                 </div>
+                
+                                <!-- Dark/Light mode toggle button -->
+                <button id="themeToggle" class="btn btn-light" type="button" title="切换深色/浅色模式">
+                    <i class="bi bi-moon"></i>
+                </button>
                 
                 <!-- Settings dropdown (rightmost) -->
                 <div class="dropdown">
@@ -271,6 +276,41 @@
     
     <!-- 应用初始化 -->
     <script>
+        // 主题切换功能
+        function initThemeToggle() {
+            const themeToggle = document.getElementById('themeToggle');
+            const themeIcon = themeToggle.querySelector('i');
+            
+            // 检查本地存储中的主题设置
+            const savedTheme = localStorage.getItem('theme');
+            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            
+            // 设置当前主题
+            let currentTheme;
+            if (savedTheme) {
+                currentTheme = savedTheme;
+            } else {
+                currentTheme = systemPrefersDark ? 'dark' : 'light';
+            }
+            
+            // 应用主题
+            document.documentElement.setAttribute('data-theme', currentTheme);
+            themeIcon.className = currentTheme === 'dark' ? 'bi bi-sun' : 'bi bi-moon';
+            
+            // 主题切换事件
+            themeToggle.addEventListener('click', () => {
+                const currentTheme = document.documentElement.getAttribute('data-theme');
+                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+                
+                // 应用新主题
+                document.documentElement.setAttribute('data-theme', newTheme);
+                localStorage.setItem('theme', newTheme);
+                
+                // 更新图标
+                themeIcon.className = newTheme === 'dark' ? 'bi bi-sun' : 'bi bi-moon';
+            });
+        }
+        
         // 创建核心实例
         const roomRenderer = new RoomRenderer('roomContainer', 'emptyState');
         const roomManager = new RoomManager(stateManager, roomRenderer);
@@ -288,6 +328,9 @@
         
         // 页面加载完成后的初始化
         document.addEventListener('DOMContentLoaded', async () => {
+            // 初始化主题切换
+            initThemeToggle();
+            
             // 初始化模态框管理器
             modalManager.init();
             modalManager.bindEnterKey(roomManager);
@@ -761,6 +804,18 @@
             if (statusText) {
                 statusText.textContent = isRunning ? '自动更新已启动' : '自动更新已停止';
                 statusText.className = isRunning ? 'text-success' : 'text-muted';
+            }
+            
+            // 更新图标指示器
+            const statusIcon = document.getElementById('autoUpdateStatusIcon');
+            if (statusIcon) {
+                if (isRunning) {
+                    statusIcon.className = 'bi bi-play-circle text-success me-2';
+                    statusIcon.title = '自动更新已启动';
+                } else {
+                    statusIcon.className = 'bi bi-pause-circle text-muted me-2';
+                    statusIcon.title = '自动更新已停止';
+                }
             }
         }
         

@@ -2,11 +2,12 @@
 .empty-state {
     text-align: center;
     padding: 60px 20px;
-    color: #7f8c8d;
+    color: var(--empty-state-color);
+    opacity: var(--empty-state-opacity);
 }
 
 .empty-state i {
     font-size: 48px;
-    color: #bdc3c7;
+    color: var(--empty-state-icon-color);
     margin-bottom: 16px;
 }

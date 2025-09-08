@@ -11,6 +11,7 @@
 @import 'components/card-content.css';
 @import 'components/empty-state.css';
 @import 'components/add-room-card.css';
+@import 'components/modal.css';
 
 /* 布局样式 */
 @import 'layout/room-container.css';

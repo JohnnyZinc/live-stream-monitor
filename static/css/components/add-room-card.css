@@ -1,6 +1,6 @@
 /* 添加直播间卡片 */
 .add-room-card {
-    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
     border-radius: 15px;
     min-height: 300px;
     display: flex;

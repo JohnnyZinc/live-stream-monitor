@@ -1,6 +1,51 @@
 /* 全局基础样式 */
+:root {
+    /* 浅色模式变量 */
+    --background-color: #f8f9fa;
+    --text-color: #1A1D24;
+    --border-color: #E4E6EA;
+    --primary-color: #7B24FF;
+    --accent-color: #FF2D9A;
+    --live-color: #FC4444;
+    --card-background: #ffffff;
+    --navbar-background: #f8f9fa;
+    --empty-state-color: #1A1D24;
+    --empty-state-opacity: 0.7;
+    --empty-state-icon-color: #E4E6EA;
+    --cover-background: #F8F9FA;
+    --button-light: #f8f9fa;
+    --button-dark: #212529;
+    --button-dark-filter: none;
+    --success-button: #7B24FF;
+    --success-button-hover: #6a1fdf;
+    --muted-text: #6c757d;
+}
+
+/* 深色模式变量 */
+[data-theme="dark"] {
+    --background-color: #121418;
+    --text-color: #D1D5DB;
+    --border-color: #2F333B;
+    --primary-color: #A26EFF;
+    --accent-color: #FF69B4;
+    --live-color: #FF5252;
+    --card-background: #1e2025;
+    --navbar-background: #1e2025;
+    --empty-state-color: #D1D5DB;
+    --empty-state-opacity: 0.7;
+    --empty-state-icon-color: #2F333B;
+    --cover-background: #121418;
+    --button-light: #2F333B;
+    --button-dark: #D1D5DB;
+    --button-dark-filter: invert(1) grayscale(100%) brightness(200%);
+    --success-button: #A26EFF;
+    --success-button-hover: #8a5cf0;
+    --muted-text: #9ca3af;
+}
+
 body {
-    background: #f8f9fa;
+    background: var(--background-color);
+    color: var(--text-color);
     font-family: 'Microsoft YaHei', sans-serif;
     padding-top: 80px;
     padding-bottom: 2rem;

@@ -1,0 +1,43 @@
+/* 模态框样式 */
+.modal-content {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.modal-header {
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-footer {
+    border-top: 1px solid var(--border-color);
+}
+
+.modal-title {
+    color: var(--text-color);
+}
+
+.btn-close {
+    filter: var(--button-dark-filter);
+}
+
+.form-control {
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+}
+
+.form-control:focus {
+    background-color: var(--card-background);
+    border-color: var(--primary-color);
+    color: var(--text-color);
+    box-shadow: 0 0 0 0.2rem rgba(123, 36, 255, 0.25);
+}
+
+.form-label {
+    color: var(--text-color);
+}
+
+.form-text {
+    color: var(--muted-text);
+}
