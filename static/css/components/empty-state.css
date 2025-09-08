@@ -1,0 +1,12 @@
+/* 空状态样式 */
+.empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    color: #7f8c8d;
+}
+
+.empty-state i {
+    font-size: 48px;
+    color: #bdc3c7;
+    margin-bottom: 16px;
+}

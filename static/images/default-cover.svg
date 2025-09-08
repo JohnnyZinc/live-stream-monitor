@@ -1,0 +1,7 @@
+<svg width="300" height="180" viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景 -->
+  <rect width="300" height="180" fill="#f1f1f1ff"/>
+  
+  <!-- 文字 -->
+  <text x="150" y="100" text-anchor="middle" font-family="Arial, sans-serif" font-size="40" fill="#707070">暂无封面</text>
+</svg>

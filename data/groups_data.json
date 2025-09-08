@@ -1,0 +1,150 @@
+{
+  "全部关注": {
+    "type": "system",
+    "rooms": [
+      "https://www.douyu.com/71415",
+      "https://www.douyu.com/84452",
+      "https://www.douyu.com/74751",
+      "https://www.douyu.com/80432",
+      "https://www.douyu.com/6560603",
+      "https://www.douyu.com/844947",
+      "https://www.douyu.com/138243",
+      "https://www.douyu.com/428250",
+      "https://www.douyu.com/5716430",
+      "https://www.douyu.com/5551871",
+      "https://www.douyu.com/4238637",
+      "https://www.huya.com/102411",
+      "https://www.huya.com/980312",
+      "https://www.huya.com/333003",
+      "https://www.huya.com/2808",
+      "https://www.huya.com/520816",
+      "https://www.huya.com/520819",
+      "https://www.huya.com/149361",
+      "https://www.huya.com/527988",
+      "https://www.douyu.com/968987",
+      "https://live.bilibili.com/11623469",
+      "https://live.bilibili.com/23068931",
+      "https://www.douyu.com/288016",
+      "https://www.douyu.com/1126960",
+      "https://live.douyin.com/933054025132",
+      "https://live.douyin.com/161761695224",
+      "https://live.douyin.com/463134668571",
+      "https://live.douyin.com/539919356244",
+      "https://live.douyin.com/202756377804",
+      "https://live.douyin.com/629458933",
+      "https://live.douyin.com/89234974709",
+      "https://live.douyin.com/588632019",
+      "https://live.douyin.com/769667829224",
+      "https://live.douyin.com/renyixu1989",
+      "https://live.douyin.com/311496431425",
+      "https://live.douyin.com/zhuboyangshu",
+      "https://www.douyu.com/3168536",
+      "https://www.douyu.com/4624967",
+      "https://live.douyin.com/421527298234",
+      "https://live.douyin.com/592629992587",
+      "https://live.douyin.com/447584845941",
+      "https://live.douyin.com/89447983693",
+      "https://live.douyin.com/1676336575",
+      "https://live.douyin.com/941738836754",
+      "https://live.douyin.com/1797945538"
+    ]
+  },
+  "直播中": {
+    "type": "system",
+    "rooms": [
+      "https://www.douyu.com/6560603",
+      "https://www.douyu.com/844947",
+      "https://www.douyu.com/138243",
+      "https://www.douyu.com/288016",
+      "https://www.douyu.com/3168536"
+    ]
+  },
+  "未开播": {
+    "type": "system",
+    "rooms": [
+      "https://www.douyu.com/71415",
+      "https://www.douyu.com/84452",
+      "https://www.douyu.com/74751",
+      "https://www.douyu.com/80432",
+      "https://www.douyu.com/428250",
+      "https://www.douyu.com/5716430",
+      "https://www.douyu.com/5551871",
+      "https://www.douyu.com/4238637",
+      "https://www.huya.com/102411",
+      "https://www.huya.com/980312",
+      "https://www.huya.com/333003",
+      "https://www.huya.com/2808",
+      "https://www.huya.com/520816",
+      "https://www.huya.com/520819",
+      "https://www.huya.com/149361",
+      "https://www.huya.com/527988",
+      "https://www.douyu.com/968987",
+      "https://live.bilibili.com/11623469",
+      "https://live.bilibili.com/23068931",
+      "https://www.douyu.com/1126960",
+      "https://live.douyin.com/933054025132",
+      "https://live.douyin.com/161761695224",
+      "https://live.douyin.com/463134668571",
+      "https://live.douyin.com/539919356244",
+      "https://live.douyin.com/202756377804",
+      "https://live.douyin.com/629458933",
+      "https://live.douyin.com/89234974709",
+      "https://live.douyin.com/588632019",
+      "https://live.douyin.com/769667829224",
+      "https://live.douyin.com/renyixu1989",
+      "https://live.douyin.com/311496431425",
+      "https://live.douyin.com/zhuboyangshu",
+      "https://www.douyu.com/4624967",
+      "https://live.douyin.com/421527298234",
+      "https://live.douyin.com/592629992587",
+      "https://live.douyin.com/447584845941",
+      "https://live.douyin.com/89447983693",
+      "https://live.douyin.com/1676336575",
+      "https://live.douyin.com/941738836754",
+      "https://live.douyin.com/1797945538"
+    ]
+  },
+  "特别关注": {
+    "type": "system",
+    "rooms": [
+      "https://www.douyu.com/84452",
+      "https://www.douyu.com/71415",
+      "https://www.douyu.com/74751"
+    ]
+  },
+  "云顶之弈": {
+    "type": "custom",
+    "rooms": [
+      "https://www.douyu.com/6560603",
+      "https://www.douyu.com/844947",
+      "https://www.huya.com/102411",
+      "https://live.douyin.com/592629992587"
+    ]
+  },
+  "英雄联盟": {
+    "type": "custom",
+    "rooms": [
+      "https://www.douyu.com/138243",
+      "https://www.huya.com/333003",
+      "https://www.douyu.com/288016",
+      "https://www.huya.com/980312",
+      "https://www.huya.com/149361",
+      "https://www.douyu.com/1126960",
+      "https://live.douyin.com/421527298234"
+    ]
+  },
+  "绝地求生": {
+    "type": "custom",
+    "rooms": [
+      "https://live.douyin.com/202756377804",
+      "https://live.douyin.com/447584845941",
+      "https://live.douyin.com/933054025132",
+      "https://live.douyin.com/161761695224",
+      "https://live.douyin.com/463134668571",
+      "https://live.douyin.com/539919356244",
+      "https://live.douyin.com/89234974709",
+      "https://live.douyin.com/311496431425",
+      "https://www.douyu.com/3168536"
+    ]
+  }
+}

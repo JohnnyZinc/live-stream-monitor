@@ -1,0 +1,16 @@
+/* 主样式文件 - 导入所有CSS模块 */
+
+/* 基础样式 */
+@import 'base/base.css';
+@import 'base/animations.css';
+
+/* 组件样式 */
+@import 'components/navbar.css';
+@import 'components/room-card.css';
+@import 'components/cover.css';
+@import 'components/card-content.css';
+@import 'components/empty-state.css';
+@import 'components/add-room-card.css';
+
+/* 布局样式 */
+@import 'layout/room-container.css';

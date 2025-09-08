@@ -1,0 +1,108 @@
+/* 卡片内容样式 */
+.card-content {
+    padding: 12px;
+    position: relative;
+}
+
+.card-header {
+    display: grid;
+    grid-template-columns: 40px 1fr auto;
+    gap: 10px;
+    align-items: start;
+}
+
+.avatar-left {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.text-content {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    align-items: flex-start;
+}
+
+.anchor-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.platform-icon {
+    width: 16px;
+    height: 16px;
+    border-radius: 3px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+
+.anchor-name {
+    font-size: 14px;
+    color: #2c3e50;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal;
+    line-height: 1.3;
+}
+
+.room-title {
+    font-size: 14px;
+    color: #7f8c8d;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: normal;
+    line-height: 1.3;
+}
+
+.room-id {
+    font-size: 12px;
+    color: #bdc3c7;
+    margin-top: 5px;
+}
+
+/* 删除按钮 */
+.delete-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: rgba(255, 255, 255, 0.9);
+    border: none;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+    z-index: 10;
+}
+
+.delete-btn:hover {
+    opacity: 1;
+    background: rgba(255, 255, 255, 1);
+}
+
+/* 人气值样式 */
+.popular-num {
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    font-size: 12px;
+    color: #e74c3c;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.popular-num i {
+    font-size: 10px;
+}

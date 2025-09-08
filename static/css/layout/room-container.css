@@ -1,0 +1,59 @@
+/* 直播间容器 */
+.room-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    gap: 1rem;
+    padding: 1rem;
+    margin: 0;
+}
+
+/* 直播间卡片布局 */
+.room-card {
+    flex: 1 1 calc(100% - 2rem);
+    max-width: calc(100% - 2rem);
+    margin: 0;
+    box-sizing: border-box;
+}
+
+/* 响应式布局 */
+@media (min-width: 500px) {
+    .room-card {
+        flex: 1 1 calc(50% - 1rem);
+        max-width: calc(50% - 1rem);
+    }
+}
+
+@media (min-width: 768px) {
+    .room-card {
+        flex: 1 1 calc(33.333% - 1rem);
+        max-width: calc(33.333% - 1rem);
+    }
+}
+
+@media (min-width: 992px) {
+    .room-card {
+        flex: 1 1 calc(25% - 1rem);
+        max-width: calc(25% - 1rem);
+    }
+}
+
+@media (min-width: 1200px) {
+    .room-card {
+        flex: 1 1 calc(20% - 1rem);
+        max-width: calc(20% - 1rem);
+    }
+}
+
+@media (min-width: 1400px) {
+    .room-card {
+        flex: 1 1 calc(16.666% - 1rem);
+        max-width: calc(16.666% - 1rem);
+    }
+}
+
+@media (max-width: 768px) {
+    .room-card {
+        margin-bottom: 20px;
+    }
+}

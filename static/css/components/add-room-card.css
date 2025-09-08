@@ -1,0 +1,18 @@
+/* 添加直播间卡片 */
+.add-room-card {
+    background: linear-gradient(135deg, #ff6b6b, #feca57);
+    border-radius: 15px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: white;
+    text-align: center;
+}
+
+.add-room-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}

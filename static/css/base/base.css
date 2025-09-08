@@ -1,0 +1,7 @@
+/* 全局基础样式 */
+body {
+    background: #f8f9fa;
+    font-family: 'Microsoft YaHei', sans-serif;
+    padding-top: 80px;
+    padding-bottom: 2rem;
+}
