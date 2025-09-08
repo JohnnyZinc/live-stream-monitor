@@ -7,12 +7,12 @@
     "anchor": "轩子巨2猪",
     "title": "轩子正在直播中",
     "url": "https://www.huya.com/520819",
-    "is_live": false,
-    "status_info": "OFF",
+    "is_live": true,
+    "status_info": "ON",
     "avatar": "https://huyaimg.msstatic.com/avatar/1047/72/b3e0fa5f03fa27b02ae4ea07fa7b8f_180_135.jpg?1751634281",
-    "cover": "https://live-cover.msstatic.com/huyalive/1199656348805-1199656348805-5843187991278780416-2399312821066-10057-A-0-1/20250908023132.jpg",
-    "popular_num": "1581172",
+    "cover": "https://live-cover.msstatic.com/huyalive/1199656348805-1199656348805-5843187991278780416-2399312821066-10057-A-0-1/20250908223628.jpg",
+    "popular_num": "55215",
     "from_cache": false
   },
-  "timestamp": 1757329918.622718
+  "timestamp": 1757342237.2093606
 }

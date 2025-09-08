@@ -7,12 +7,12 @@
     "anchor": "小小肥龙吖",
     "title": "”0物资苟分“助眠！",
     "url": "https://live.douyin.com/933054025132",
-    "is_live": false,
-    "status_info": "未开播",
-    "avatar": "https://p3.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_710597f9b4402fcd67b0e4f64272f692.jpeg?from=3067671334",
-    "cover": "",
-    "popular_num": 0,
+    "is_live": true,
+    "status_info": "直播中",
+    "avatar": "https://p26.douyinpic.com/aweme/100x100/aweme-avatar/tos-cn-avt-0015_710597f9b4402fcd67b0e4f64272f692.jpeg?from=3067671334",
+    "cover": "https://p3-webcast-sign.douyinpic.com/image-cut-tos-priv/b71d5e8cb08dbe3bf3cdc75bd7dc172e~tplv-qz53dukwul-common-resize:0:0.image?biz_tag=app_6383_webcast&from=webcast.room.pack&l=20250908223725D643988E28B55B112504&lk3s=39e7556e&s=enter_room&sc=webcast_cover&x-expires=1759934245&x-signature=DM%2FKnUTARyij6RnTeeUEfdN9TsQ%3D",
+    "popular_num": 151009,
     "from_cache": false
   },
-  "timestamp": 1757329925.9396782
+  "timestamp": 1757342245.138703
 }

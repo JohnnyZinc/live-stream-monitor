@@ -162,15 +162,23 @@
     
     <!-- 直播间选项对话框 -->
     <div class="modal fade" id="roomOptionsModal" tabindex="-1">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">直播间选项</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <div class="modal-header text-center py-3 border-bottom-0">
+                    <div class="w-100">
+                        <img id="roomOptionsAvatar" src="" alt="主播头像" class="rounded-circle mb-2" style="width: 48px; height: 48px; object-fit: cover;">
+                        <h5 class="modal-title w-100" id="roomOptionsTitle">直播间选项</h5>
+                    </div>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body text-center">
                     <input type="hidden" id="roomOptionsUrl">
                     <input type="hidden" id="roomOptionsAnchorName">
+                    
+                    <!-- 直播封面 -->
+                    <div class="mb-3">
+                        <img id="roomOptionsCover" src="" alt="直播封面" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                    </div>
+                    
                     <div class="d-grid gap-2">
                         <button type="button" class="btn btn-outline-primary" onclick="openGroupAssignmentFromOptions()">
                             <i class="bi bi-folder-plus"></i> 设置分组
@@ -501,6 +509,38 @@
         function showRoomOptionsDialog(roomUrl, anchorName) {
             document.getElementById('roomOptionsUrl').value = roomUrl;
             document.getElementById('roomOptionsAnchorName').value = anchorName;
+            
+            // 获取房间信息并设置模态框标题、头像和封面
+            const rooms = stateManager.getRooms();
+            const room = rooms.find(r => r.url === roomUrl);
+            
+            const titleElement = document.getElementById('roomOptionsTitle');
+            const avatarElement = document.getElementById('roomOptionsAvatar');
+            const coverElement = document.getElementById('roomOptionsCover');
+            
+            if (room) {
+                titleElement.textContent = anchorName;  // 移除"的直播间"后缀
+                avatarElement.src = room.avatar || CONFIG.IMAGES.defaultAvatar;
+                avatarElement.onerror = function() {
+                    this.src = CONFIG.IMAGES.defaultAvatar;
+                    this.style.filter = 'grayscale(100%)';
+                };
+                
+                // 设置封面
+                if (coverElement) {
+                    coverElement.src = room.cover || CONFIG.IMAGES.defaultCover;
+                    coverElement.onerror = function() {
+                        this.src = CONFIG.IMAGES.defaultCover;
+                        this.style.filter = 'grayscale(100%)';
+                    };
+                }
+            } else {
+                titleElement.textContent = anchorName;  // 移除"的直播间"后缀
+                avatarElement.src = CONFIG.IMAGES.defaultAvatar;
+                if (coverElement) {
+                    coverElement.src = CONFIG.IMAGES.defaultCover;
+                }
+            }
             
             const modal = new bootstrap.Modal(document.getElementById('roomOptionsModal'));
             modal.show();
