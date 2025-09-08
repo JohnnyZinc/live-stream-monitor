@@ -8,10 +8,50 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    color: #88ada6 !important;
+}
+
+.navbar-brand:hover {
+    color: #88ada6 !important;
+}
+
+.navbar-brand .bi {
+    color: #88ada6;
+}
+
+/* 统一的二级菜单按钮样式 */
+#moreActionsDropdown {
+    font-size: 1rem;
+    padding: 6px 12px;
+}
+
+/* 自动更新按钮组样式 */
+.btn-group .btn {
+    border-radius: 0;
+}
+
+.btn-group .btn:first-child {
+    border-radius: 0.375rem 0 0 0.375rem;
+}
+
+.btn-group .btn:last-child {
+    border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* 下拉菜单项样式 */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
 
 /* 刷新指示器样式 */
 #refreshIndicator {
     border-color: #007bff;
     border-width: 2px;
+}
+
+/* Auto update status text */
+#autoUpdateStatus {
+    white-space: nowrap;
 }
