@@ -151,3 +151,21 @@
     background-color: var(--button-light);
     color: var(--button-dark);
 }
+
+/* User menu dropdown button */
+#userMenuDropdown {
+    background-color: var(--button-light);
+    color: var(--button-dark);
+    border: 1px solid var(--border-color);
+    font-size: 1rem;
+    padding: 6px 12px;
+}
+
+#userMenuDropdown:hover {
+    background-color: var(--button-light);
+    color: var(--button-dark);
+}
+
+#userMenuDropdown:focus {
+    box-shadow: 0 0 0 0.2rem rgba(123, 36, 255, 0.25);
+}

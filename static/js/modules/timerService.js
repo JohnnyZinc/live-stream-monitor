@@ -131,12 +131,27 @@ class TimerService {
             
             // 首先获取需要更新的房间列表
             const response = await APIManager.incrementalUpdateAll();
+            if (!response) {
+                console.error("获取房间列表失败: 响应为空");
+                return;
+            }
+            
             if (!response.success) {
                 console.error("获取房间列表失败:", response.error);
                 return;
             }
             
-            const roomsToUpdate = response.rooms_to_update;
+            // 检查是否没有需要更新的直播间
+            if (response.message && response.message.includes('没有需要更新的直播间')) {
+                console.log("没有需要更新的直播间");
+                return;
+            }
+            
+            const roomsToUpdate = response.rooms_to_update || [];
+            if (!Array.isArray(roomsToUpdate)) {
+                console.error("rooms_to_update 数据格式错误:", roomsToUpdate);
+                return;
+            }
             console.log("需要更新", roomsToUpdate.length, "个直播间");
             
             // 逐个更新房间信息

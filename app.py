@@ -1,286 +1,174 @@
 from flask import Flask, render_template, request, jsonify
-import re
-import requests
-import json
 import os
-import hashlib
-import time
 from tools.platform_factory import PlatformFactory
+from tools.user_manager import (
+    login_required, admin_required, get_current_user_id
+)
+from tools.data_handler import (
+    load_saved_rooms, save_rooms_data, get_user_rooms_file
+)
+from tools.cache_manager import (
+    load_cached_data, save_cached_data, clear_old_cache
+)
+from tools.group_manager import (
+    load_groups, save_groups, update_room_groups
+)
+from tools.config_manager import (
+    load_douyin_config, save_douyin_config, 
+    load_refresh_settings, save_refresh_settings
+)
+from tools.utils import (
+    check_data_changes, merge_room_data
+)
 
 app = Flask(__name__)
-
-# 数据存储路径
-DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
-CACHE_DIR = os.path.join(DATA_DIR, 'cache')
-ROOMS_FILE = os.path.join(DATA_DIR, 'rooms_data.json')
-GROUPS_FILE = os.path.join(DATA_DIR, 'groups_data.json')
-REFRESH_SETTINGS_FILE = os.path.join(DATA_DIR, 'refresh_settings.json')
-
-# 抖音API配置文件路径
-DOUYIN_CONFIG_FILE = os.path.join(DATA_DIR, 'douyin_config.json')
-
-# 确保数据目录存在
-os.makedirs(DATA_DIR, exist_ok=True)
-os.makedirs(CACHE_DIR, exist_ok=True)
-
-def load_saved_rooms():
-    """从文件中加载保存的直播间URL列表"""
-    if os.path.exists(ROOMS_FILE):
-        try:
-            with open(ROOMS_FILE, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                # 兼容旧格式和新格式
-                if data and isinstance(data[0], dict) and 'url' in data[0]:
-                    return [item['url'] for item in data]  # 迁移旧数据
-                return data
-        except Exception:
-            return []
-    return []
-
-def load_groups():
-    """从文件中加载分组数据"""
-    if os.path.exists(GROUPS_FILE):
-        try:
-            with open(GROUPS_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            pass
-    
-    # 默认分组
-    default_groups = {
-        "全部关注": {"type": "system", "rooms": []},
-        "直播中": {"type": "system", "rooms": []},
-        "未开播": {"type": "system", "rooms": []},
-        "特别关注": {"type": "system", "rooms": []}
-    }
-    save_groups(default_groups)
-    return default_groups
-
-def load_douyin_config():
-    """从文件中加载抖音API配置"""
-    if os.path.exists(DOUYIN_CONFIG_FILE):
-        try:
-            with open(DOUYIN_CONFIG_FILE, 'r', encoding='utf-8') as f:
-                return json.load(f)
-        except Exception:
-            pass
-    
-    # 默认配置
-    default_config = {
-        "api_url": "https://douyin.wtf"
-    }
-    save_douyin_config(default_config)
-    return default_config
-
-
-def load_refresh_settings():
-    """从文件中加载刷新频率设置"""
-    if os.path.exists(REFRESH_SETTINGS_FILE):
-        try:
-            with open(REFRESH_SETTINGS_FILE, 'r', encoding='utf-8') as f:
-                data = json.load(f)
-                # 验证数据格式
-                if isinstance(data, dict) and 'refresh_interval' in data:
-                    interval = data['refresh_interval']
-                    # 验证间隔是正整数（分钟）
-                    if isinstance(interval, int) and interval > 0:
-                        return data
-        except Exception:
-            pass
-    
-    # 默认设置（10分钟）
-    default_settings = {
-        "refresh_interval": 10  # 分钟
-    }
-    save_refresh_settings(default_settings)
-    return default_settings
-
-
-def save_refresh_settings(settings):
-    """保存刷新频率设置到文件"""
-    try:
-        # 验证设置格式
-        if not isinstance(settings, dict) or 'refresh_interval' not in settings:
-            raise ValueError("Invalid settings format")
-        
-        interval = settings['refresh_interval']
-        # 验证间隔是正整数（分钟）
-        if not isinstance(interval, int) or interval <= 0:
-            raise ValueError("Refresh interval must be a positive integer")
-        
-        with open(REFRESH_SETTINGS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(settings, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f"保存刷新频率设置失败: {e}")
-        raise
-
-def save_douyin_config(config):
-    """保存抖音API配置到文件"""
-    try:
-        with open(DOUYIN_CONFIG_FILE, 'w', encoding='utf-8') as f:
-            json.dump(config, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f"保存抖音API配置失败: {e}")
-
-def save_groups(groups):
-    """保存分组数据到文件"""
-    try:
-        with open(GROUPS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(groups, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f"保存分组数据失败: {e}")
-
-def save_rooms_data(urls):
-    """保存直播间URL到文件"""
-    try:
-        with open(ROOMS_FILE, 'w', encoding='utf-8') as f:
-            json.dump(urls, f, ensure_ascii=False, indent=2)
-        
-        # 更新分组中的房间列表
-        groups = load_groups()
-        all_rooms_group = groups.get("全部关注", {"type": "system", "rooms": []})
-        all_rooms_group["rooms"] = urls
-        groups["全部关注"] = all_rooms_group
-        save_groups(groups)
-    except Exception as e:
-        print(f"保存数据失败: {e}")
-
-def get_cache_key(url):
-    """根据URL生成缓存键"""
-    return hashlib.md5(url.encode('utf-8')).hexdigest()
-
-def load_cached_data(url):
-    """从缓存加载直播间的详细信息"""
-    cache_key = get_cache_key(url)
-    cache_file = os.path.join(CACHE_DIR, f"{cache_key}.json")
-    
-    if os.path.exists(cache_file):
-        try:
-            with open(cache_file, 'r', encoding='utf-8') as f:
-                cache_data = json.load(f)
-                # 检查缓存是否过期（24小时）
-                if time.time() - cache_data.get('timestamp', 0) < 86400:
-                    return cache_data.get('data')
-        except Exception as e:
-            print(f"加载缓存失败: {e}")
-    return None
-
-def save_cached_data(url, data):
-    """保存直播间的详细信息到缓存"""
-    cache_key = get_cache_key(url)
-    cache_file = os.path.join(CACHE_DIR, f"{cache_key}.json")
-    
-    cache_data = {
-        'url': url,
-        'data': data,
-        'timestamp': time.time()
-    }
-    
-    try:
-        with open(cache_file, 'w', encoding='utf-8') as f:
-            json.dump(cache_data, f, ensure_ascii=False, indent=2)
-    except Exception as e:
-        print(f"保存缓存失败: {e}")
-
-
-def check_data_changes(old_data, new_data):
-    """检查数据是否发生变化"""
-    if not old_data or not new_data:
-        return True
-    
-    # 定义需要检测变化的字段
-    fields_to_check = ['is_live', 'title', 'cover', 'avatar', 'anchor']
-    
-    for field in fields_to_check:
-        old_value = old_data.get(field)
-        new_value = new_data.get(field)
-        
-        # 处理None值情况
-        if old_value is None and new_value is None:
-            continue
-        elif old_value is None or new_value is None:
-            # 如果新数据获取失败，不认为是变化
-            if new_data.get('fetch_status') == 'failed' and new_value in ['', '获取失败', '抖音直播']:
-                continue
-            return True
-        elif old_value != new_value:
-            return True
-    
-    return False
-
-
-def merge_room_data(old_data, new_data):
-    """合并房间数据，保留有效原有数据"""
-    if not new_data:
-        return old_data or {}
-    
-    # 如果新数据获取失败，保留原有数据
-    if new_data.get('fetch_status') == 'failed':
-        merged_data = old_data.copy() if old_data else {}
-        # 只更新明确有效的字段，保留原有有效数据
-        for field in ['is_live', 'status_info']:
-            if field in new_data and new_data[field] is not None:
-                merged_data[field] = new_data[field]
-        return merged_data
-    
-    # 如果新数据正常，但某些字段为空，则保留原有数据中的对应字段
-    merged_data = old_data.copy() if old_data else {}
-    merged_data.update(new_data)  # 先合并所有新数据
-    
-    # 定义关键字段，当这些字段在新数据中为空时，保留旧数据
-    critical_fields = ['title', 'anchor', 'avatar', 'cover', 'popular_num']
-    
-    for field in critical_fields:
-        # 如果新数据中的关键字段为空，但旧数据中有值，则保留旧数据
-        if field in merged_data and not merged_data[field] and old_data and old_data.get(field):
-            merged_data[field] = old_data[field]
-    
-    return merged_data
-
-def update_room_groups(rooms_data):
-    """根据房间状态更新分组"""
-    groups = load_groups()
-    
-    # 重置系统分组
-    groups["直播中"]["rooms"] = []
-    groups["未开播"]["rooms"] = []
-    
-    # 根据状态分配房间到相应分组
-    for room in rooms_data:
-        if room.get("is_live", False):
-            groups["直播中"]["rooms"].append(room["url"])
-        else:
-            groups["未开播"]["rooms"].append(room["url"])
-    
-    save_groups(groups)
-    return groups
-
-def clear_old_cache():
-    """清理过期缓存文件"""
-    try:
-        for filename in os.listdir(CACHE_DIR):
-            if filename.endswith('.json'):
-                file_path = os.path.join(CACHE_DIR, filename)
-                try:
-                    with open(file_path, 'r', encoding='utf-8') as f:
-                        cache_data = json.load(f)
-                        if time.time() - cache_data.get('timestamp', 0) >= 86400:
-                            os.remove(file_path)
-                except Exception:
-                    # 如果文件损坏，直接删除
-                    os.remove(file_path)
-    except Exception as e:
-        print(f"清理缓存失败: {e}")
-
-# 已移除旧的集成功能，现在使用tools.platform_factory的模块化实现
+app.secret_key = 'your-secret-key-here'  # 在生产环境中应该使用环境变量
 
 @app.route('/')
 def index():
-    return render_template('index.html')
+    # 如果用户已登录，显示主页面
+    from flask import session
+    if 'user_id' in session:
+        return render_template('index.html')
+    else:
+        # 如果用户未登录，显示登录页面
+        return render_template('login.html')
+
+# 用户认证路由
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    """用户登录"""
+    from flask import session
+    from tools.user_manager import authenticate_user
+    if request.method == 'GET':
+        return render_template('login.html')
+    
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        
+        if not username or not password:
+            return jsonify({'error': '用户名和密码不能为空'})
+        
+        user = authenticate_user(username, password)
+        if not user:
+            return jsonify({'error': '用户名或密码错误'})
+        
+        # 设置session
+        session['user_id'] = username
+        session['is_admin'] = user.get('is_admin', False)
+        
+        return jsonify({
+            'success': True,
+            'user': {
+                'username': username,
+                'is_admin': user.get('is_admin', False)
+            }
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    """用户注册"""
+    from tools.user_manager import load_admin_config, create_user
+    # 检查是否允许注册
+    admin_config = load_admin_config()
+    if not admin_config.get('allow_registration', True):
+        return jsonify({'error': '当前不允许注册新用户'}), 403
+    
+    if request.method == 'GET':
+        return render_template('register.html')
+    
+    try:
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        confirm_password = data.get('confirm_password', '')
+        
+        if not username or not password:
+            return jsonify({'error': '用户名和密码不能为空'})
+        
+        if password != confirm_password:
+            return jsonify({'error': '两次输入的密码不一致'})
+        
+        if len(password) < 6:
+            return jsonify({'error': '密码长度至少为6位'})
+        
+        create_user(username, password, is_admin=False)
+        
+        return jsonify({'success': True, 'message': '注册成功，请登录'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/logout', methods=['POST'])
+def logout():
+    """用户登出"""
+    from flask import session
+    try:
+        # 清除session中的所有数据
+        session.pop('user_id', None)
+        session.pop('is_admin', None)
+        session.clear()
+        return jsonify({'success': True, 'message': '已退出登录'})
+    except Exception as e:
+        # 即使出现异常，也返回成功以确保前端能够正常重定向
+        print(f"登出时出现异常: {str(e)}")
+        return jsonify({'success': True, 'message': '已退出登录'})
+
+@app.route('/get_current_user', methods=['GET'])
+def get_current_user():
+    """获取当前登录用户信息"""
+    from flask import session
+    from tools.user_manager import load_users
+    if 'user_id' not in session:
+        return jsonify({'error': '未登录'})
+    
+    users = load_users()
+    user = users.get(session['user_id'])
+    
+    if not user:
+        return jsonify({'error': '用户不存在'})
+    
+    return jsonify({
+        'success': True,
+        'user': {
+            'username': user['username'],
+            'is_admin': user.get('is_admin', False)
+        }
+    })
+
+@app.route('/check_registration_allowed', methods=['GET'])
+def check_registration_allowed():
+    """检查是否允许注册"""
+    from tools.user_manager import load_admin_config
+    admin_config = load_admin_config()
+    return jsonify({
+        'success': True,
+        'allowed': admin_config.get('allow_registration', True)
+    })
+
+@app.route('/check_auth_status', methods=['GET'])
+def check_auth_status():
+    """检查认证状态"""
+    from flask import session
+    if 'user_id' in session:
+        return jsonify({
+            'authenticated': True,
+            'user_id': session['user_id'],
+            'is_admin': session.get('is_admin', False)
+        })
+    else:
+        return jsonify({
+            'authenticated': False
+        })
 
 @app.route('/add_room', methods=['POST'])
+@login_required
 def add_room():
     try:
+        from flask import session
         data = request.get_json()
         room_input = data.get('room_url', '').strip()
         
@@ -298,11 +186,12 @@ def add_room():
         room_url = f'{base_url}/{room_id}'
         
         # 加载现有数据
-        urls = load_saved_rooms()
+        user_id = session.get('user_id', 'admin')
+        urls = load_saved_rooms(user_id)
         
         if room_url not in urls:
             urls.append(room_url)
-            save_rooms_data(urls)
+            save_rooms_data(urls, user_id)
         
         # 返回当前URL列表
         return jsonify({
@@ -314,15 +203,18 @@ def add_room():
         return jsonify({'error': str(e)})
 
 @app.route('/get_room_info')
+@login_required
 def get_room_info_route():
     """获取单个直播间的实时信息"""
     try:
+        from flask import session
         url = request.args.get('url')
         if not url:
             return jsonify({'error': '请提供URL'})
             
+        user_id = session.get('user_id', 'admin')
         # 先从缓存加载数据
-        cached_data = load_cached_data(url)
+        cached_data = load_cached_data(url, user_id)
         if cached_data and request.args.get('use_cache', 'false') != 'false':
             cached_data['from_cache'] = True
             return jsonify(cached_data)
@@ -336,7 +228,7 @@ def get_room_info_route():
         # 获取抖音API配置（如果是抖音平台）
         douyin_api_url = None
         if checker_class.__name__ == 'DouyinChecker':
-            douyin_config = load_douyin_config()
+            douyin_config = load_douyin_config(user_id)
             douyin_api_url = douyin_config.get('api_url', 'https://douyin.wtf') + '/api/douyin/web/fetch_user_live_videos'
         
         # 获取房间信息
@@ -369,7 +261,7 @@ def get_room_info_route():
         }
         
         # 保存到缓存
-        save_cached_data(url, result)
+        save_cached_data(url, result, user_id)
         
         return jsonify(result)
         
@@ -377,16 +269,19 @@ def get_room_info_route():
         return jsonify({'error': str(e)})
 
 @app.route('/remove_room', methods=['POST'])
+@login_required
 def remove_room():
     """移除直播间"""
     try:
+        from flask import session
         data = request.get_json()
         room_url = data.get('room_url', '').strip()
         
-        urls = load_saved_rooms()
+        user_id = session.get('user_id', 'admin')
+        urls = load_saved_rooms(user_id)
         if room_url in urls:
             urls.remove(room_url)
-            save_rooms_data(urls)
+            save_rooms_data(urls, user_id)
         
         return jsonify({
             'success': True,
@@ -397,27 +292,31 @@ def remove_room():
         return jsonify({'error': str(e)})
 
 @app.route('/get_rooms')
+@login_required
 def get_rooms():
     """获取保存的直播间URL列表"""
-    urls = load_saved_rooms()
+    from flask import session
+    user_id = session.get('user_id', 'admin')
+    urls = load_saved_rooms(user_id)
     return jsonify(urls)
 
-# 移除了旧的/check路由，仅保留/add_room用于卡片展示
-
 @app.route('/load_cached_rooms')
+@login_required
 def load_cached_rooms():
     """加载所有保存房间的缓存数据"""
     try:
-        urls = load_saved_rooms()
+        from flask import session
+        user_id = session.get('user_id', 'admin')
+        urls = load_saved_rooms(user_id)
         cached_rooms = []
         
         for url in urls:
-            cached_data = load_cached_data(url)
+            cached_data = load_cached_data(url, user_id)
             if cached_data:
                 cached_rooms.append(cached_data)
         
         # 更新分组信息
-        update_room_groups(cached_rooms)
+        update_room_groups(cached_rooms, user_id)
         
         return jsonify({
             'success': True,
@@ -429,19 +328,25 @@ def load_cached_rooms():
         return jsonify({'error': str(e)})
 
 @app.route('/clear_cache', methods=['POST'])
+@login_required
 def clear_all_cache():
     """清理所有缓存"""
     try:
-        clear_old_cache()
+        from flask import session
+        user_id = session.get('user_id', 'admin')
+        clear_old_cache(user_id)
         return jsonify({'success': True, 'message': '缓存已清理'})
     except Exception as e:
         return jsonify({'error': str(e)})
 
 @app.route('/get_groups')
+@login_required
 def get_groups():
     """获取所有分组信息"""
     try:
-        groups = load_groups()
+        from flask import session
+        user_id = session.get('user_id', 'admin')
+        groups = load_groups(user_id)
         return jsonify({
             'success': True,
             'groups': groups
@@ -450,16 +355,19 @@ def get_groups():
         return jsonify({'error': str(e)})
 
 @app.route('/create_group', methods=['POST'])
+@login_required
 def create_group():
     """创建新分组"""
     try:
+        from flask import session
         data = request.get_json()
         group_name = data.get('name', '').strip()
         
         if not group_name:
             return jsonify({'error': '分组名称不能为空'})
         
-        groups = load_groups()
+        user_id = session.get('user_id', 'admin')
+        groups = load_groups(user_id)
         
         # 检查分组是否已存在
         if group_name in groups:
@@ -471,7 +379,7 @@ def create_group():
             'rooms': []
         }
         
-        save_groups(groups)
+        save_groups(groups, user_id)
         
         return jsonify({
             'success': True,
@@ -481,9 +389,11 @@ def create_group():
         return jsonify({'error': str(e)})
 
 @app.route('/update_group', methods=['POST'])
+@login_required
 def update_group():
     """更新分组信息（添加/移除房间）"""
     try:
+        from flask import session
         data = request.get_json()
         group_name = data.get('group_name', '').strip()
         room_url = data.get('room_url', '').strip()
@@ -492,7 +402,8 @@ def update_group():
         if not group_name or not room_url or not action:
             return jsonify({'error': '参数不完整'})
         
-        groups = load_groups()
+        user_id = session.get('user_id', 'admin')
+        groups = load_groups(user_id)
         
         # 检查分组是否存在
         if group_name not in groups:
@@ -513,7 +424,7 @@ def update_group():
         else:
             return jsonify({'error': '无效的操作'})
         
-        save_groups(groups)
+        save_groups(groups, user_id)
         
         return jsonify({
             'success': True,
@@ -523,16 +434,19 @@ def update_group():
         return jsonify({'error': str(e)})
 
 @app.route('/delete_group', methods=['POST'])
+@login_required
 def delete_group():
     """删除自定义分组"""
     try:
+        from flask import session
         data = request.get_json()
         group_name = data.get('name', '').strip()
         
         if not group_name:
             return jsonify({'error': '分组名称不能为空'})
         
-        groups = load_groups()
+        user_id = session.get('user_id', 'admin')
+        groups = load_groups(user_id)
         
         # 检查分组是否存在
         if group_name not in groups:
@@ -545,7 +459,7 @@ def delete_group():
         # 删除分组
         del groups[group_name]
         
-        save_groups(groups)
+        save_groups(groups, user_id)
         
         return jsonify({
             'success': True,
@@ -555,10 +469,13 @@ def delete_group():
         return jsonify({'error': str(e)})
 
 @app.route('/get_douyin_config')
-def get_douyin_config():
+@login_required
+def get_douyin_config_route():
     """获取抖音API配置"""
     try:
-        config = load_douyin_config()
+        from flask import session
+        user_id = session.get('user_id', 'admin')
+        config = load_douyin_config(user_id)
         return jsonify({
             'success': True,
             'config': config
@@ -567,9 +484,11 @@ def get_douyin_config():
         return jsonify({'error': str(e)})
 
 @app.route('/save_douyin_config', methods=['POST'])
+@login_required
 def save_douyin_config_endpoint():
     """保存抖音API配置"""
     try:
+        from flask import session
         data = request.get_json()
         api_url = data.get('api_url', '').strip()
         
@@ -580,7 +499,8 @@ def save_douyin_config_endpoint():
             'api_url': api_url
         }
         
-        save_douyin_config(config)
+        user_id = session.get('user_id', 'admin')
+        save_douyin_config(config, user_id)
         
         return jsonify({
             'success': True,
@@ -589,12 +509,14 @@ def save_douyin_config_endpoint():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 @app.route('/get_refresh_settings')
+@login_required
 def get_refresh_settings():
     """获取刷新频率设置"""
     try:
-        settings = load_refresh_settings()
+        from flask import session
+        user_id = session.get('user_id', 'admin')
+        settings = load_refresh_settings(user_id)
         return jsonify({
             'success': True,
             'settings': settings
@@ -602,11 +524,12 @@ def get_refresh_settings():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 @app.route('/save_refresh_settings', methods=['POST'])
+@login_required
 def save_refresh_settings_endpoint():
     """保存刷新频率设置"""
     try:
+        from flask import session
         data = request.get_json()
         refresh_interval = data.get('refresh_interval')
         
@@ -621,7 +544,8 @@ def save_refresh_settings_endpoint():
             'refresh_interval': refresh_interval
         }
         
-        save_refresh_settings(settings)
+        user_id = session.get('user_id', 'admin')
+        save_refresh_settings(settings, user_id)
         
         return jsonify({
             'success': True,
@@ -630,13 +554,15 @@ def save_refresh_settings_endpoint():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 @app.route('/batch_update_rooms', methods=['POST'])
+@login_required
 def batch_update_rooms():
     """后台批量更新直播间信息"""
     try:
+        from flask import session
         # 获取所有保存的房间URL
-        urls = load_saved_rooms()
+        user_id = session.get('user_id', 'admin')
+        urls = load_saved_rooms(user_id)
         
         if not urls:
             return jsonify({
@@ -651,7 +577,7 @@ def batch_update_rooms():
         failed_rooms = []
         
         # 获取抖音API配置
-        douyin_config = load_douyin_config()
+        douyin_config = load_douyin_config(user_id)
         douyin_api_url_base = douyin_config.get('api_url', 'https://douyin.wtf')
         
         # 逐个更新房间信息
@@ -702,7 +628,7 @@ def batch_update_rooms():
                     result['fetch_status'] = room_info['fetch_status']
                 
                 # 合并数据，保留有效原有数据
-                cached_data = load_cached_data(url)
+                cached_data = load_cached_data(url, user_id)
                 merged_result = merge_room_data(cached_data, result)
                 
                 # 检查数据是否发生变化
@@ -710,7 +636,7 @@ def batch_update_rooms():
                     changed_rooms.append(merged_result)
                 
                 # 保存到缓存
-                save_cached_data(url, merged_result)
+                save_cached_data(url, merged_result, user_id)
                 updated_rooms.append(merged_result)
                 
             except Exception as e:
@@ -731,11 +657,13 @@ def batch_update_rooms():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 @app.route('/incremental_update_room', methods=['POST'])
+@login_required
 def incremental_update_room():
     """增量更新单个直播间信息"""
     try:
+        from flask import session
+        user_id = session.get('user_id', 'admin')
         data = request.get_json()
         room_url = data.get('room_url')
         
@@ -751,7 +679,7 @@ def incremental_update_room():
         # 获取抖音API配置（如果是抖音平台）
         douyin_api_url = None
         if checker_class.__name__ == 'DouyinChecker':
-            douyin_config = load_douyin_config()
+            douyin_config = load_douyin_config(user_id)
             douyin_api_url = douyin_config.get('api_url', 'https://douyin.wtf') + '/api/douyin/web/fetch_user_live_videos'
         
         # 获取房间信息
@@ -788,14 +716,14 @@ def incremental_update_room():
             result['fetch_status'] = room_info['fetch_status']
         
         # 合并数据，保留有效原有数据
-        cached_data = load_cached_data(room_url)
+        cached_data = load_cached_data(room_url, user_id)
         merged_result = merge_room_data(cached_data, result)
         
         # 检查数据是否发生变化
         has_changes = check_data_changes(cached_data, merged_result)
         
         # 保存到缓存
-        save_cached_data(room_url, merged_result)
+        save_cached_data(room_url, merged_result, user_id)
         
         return jsonify({
             'success': True,
@@ -806,13 +734,15 @@ def incremental_update_room():
     except Exception as e:
         return jsonify({'error': str(e)})
 
-
 @app.route('/incremental_update_all', methods=['POST'])
+@login_required
 def incremental_update_all():
     """增量更新所有直播间信息（逐个返回）"""
     try:
+        from flask import session
         # 获取所有保存的房间URL
-        urls = load_saved_rooms()
+        user_id = session.get('user_id', 'admin')
+        urls = load_saved_rooms(user_id)
         
         if not urls:
             return jsonify({
@@ -829,7 +759,155 @@ def incremental_update_all():
     except Exception as e:
         return jsonify({'error': str(e)})
 
+# 管理员功能路由
+@app.route('/admin/users')
+@admin_required
+def admin_get_users():
+    """获取所有用户列表"""
+    try:
+        from tools.user_manager import load_users, load_admin_config
+        users = load_users()
+        admin_config = load_admin_config()
+        
+        # 移除密码哈希等敏感信息
+        users_list = []
+        for username, user_data in users.items():
+            users_list.append({
+                'username': username,
+                'is_admin': user_data.get('is_admin', False),
+                'created_at': user_data.get('created_at')
+            })
+        
+        return jsonify({
+            'success': True,
+            'users': users_list,
+            'admin_config': admin_config
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/admin/users', methods=['POST'])
+@admin_required
+def admin_create_user():
+    """创建新用户"""
+    try:
+        from tools.user_manager import create_user
+        data = request.get_json()
+        username = data.get('username', '').strip()
+        password = data.get('password', '')
+        is_admin = data.get('is_admin', False)
+        
+        if not username or not password:
+            return jsonify({'error': '用户名和密码不能为空'})
+        
+        if len(password) < 6:
+            return jsonify({'error': '密码长度至少为6位'})
+        
+        create_user(username, password, is_admin)
+        
+        return jsonify({'success': True, 'message': '用户创建成功'})
+    except ValueError as e:
+        return jsonify({'error': str(e)})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/admin/users/<username>', methods=['PUT'])
+@admin_required
+def admin_update_user(username):
+    """更新用户信息"""
+    try:
+        from flask import session
+        from tools.user_manager import load_users, save_users
+        if username == 'admin' and session.get('user_id') != 'admin':
+            return jsonify({'error': '无权修改管理员账户'})
+        
+        data = request.get_json()
+        new_password = data.get('password', '')
+        is_admin = data.get('is_admin')
+        
+        users = load_users()
+        
+        if username not in users:
+            return jsonify({'error': '用户不存在'})
+        
+        # 更新密码（如果提供了新密码）
+        if new_password:
+            from werkzeug.security import generate_password_hash
+            if len(new_password) < 6:
+                return jsonify({'error': '密码长度至少为6位'})
+            users[username]['password_hash'] = generate_password_hash(new_password)
+        
+        # 更新管理员权限（如果提供了is_admin）
+        if is_admin is not None:
+            # 只有管理员才能修改管理员权限
+            users[username]['is_admin'] = is_admin
+        
+        save_users(users)
+        
+        return jsonify({'success': True, 'message': '用户信息更新成功'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/admin/users/<username>', methods=['DELETE'])
+@admin_required
+def admin_delete_user(username):
+    """删除用户"""
+    try:
+        from flask import session
+        from tools.user_manager import load_users, save_users, get_user_data_path
+        if username == 'admin':
+            return jsonify({'error': '不能删除超级管理员'})
+        
+        if username == session.get('user_id'):
+            return jsonify({'error': '不能删除当前登录用户'})
+        
+        users = load_users()
+        
+        if username not in users:
+            return jsonify({'error': '用户不存在'})
+        
+        # 删除用户
+        del users[username]
+        save_users(users)
+        
+        # 删除用户数据目录（可选）
+        import shutil
+        user_dir = get_user_data_path(username)
+        if os.path.exists(user_dir):
+            try:
+                shutil.rmtree(user_dir)
+            except Exception as e:
+                print(f"删除用户目录失败: {e}")
+        
+        return jsonify({'success': True, 'message': '用户删除成功'})
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+@app.route('/admin/config', methods=['POST'])
+@admin_required
+def admin_update_config():
+    """更新管理员配置"""
+    try:
+        from tools.user_manager import load_admin_config, save_admin_config
+        data = request.get_json()
+        allow_registration = data.get('allow_registration')
+        
+        if allow_registration is None:
+            return jsonify({'error': '参数错误'})
+        
+        admin_config = load_admin_config()
+        admin_config['allow_registration'] = allow_registration
+        save_admin_config(admin_config)
+        
+        return jsonify({
+            'success': True, 
+            'message': '配置更新成功',
+            'config': admin_config
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
 if __name__ == '__main__':
     # 启动时清理过期缓存
-    clear_old_cache()
+    clear_old_cache('admin')  # 清理管理员缓存
     app.run(debug=True, host='0.0.0.0', port=5000)

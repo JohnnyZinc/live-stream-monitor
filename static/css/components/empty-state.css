@@ -4,6 +4,13 @@
     padding: 60px 20px;
     color: var(--empty-state-color);
     opacity: var(--empty-state-opacity);
+    width: 100%;
+    display: none; /* Hidden by default, shown by JavaScript */
+}
+
+/* 当容器为空时显示空状态 */
+.room-container.empty .empty-state {
+    display: block;
 }
 
 .empty-state i {

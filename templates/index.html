@@ -42,45 +42,64 @@
                     <i class="bi bi-moon"></i>
                 </button>
                 
-                <!-- Settings dropdown (rightmost) -->
+                <!-- User menu -->
                 <div class="dropdown">
-                    <button class="btn btn-light" type="button" id="moreActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="bi bi-three-dots-vertical"></i>
+                    <button class="btn btn-light" type="button" id="userMenuDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-person"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreActionsDropdown">
-                        <!-- 自动更新控制按钮 -->
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenuDropdown">
+                        <!-- User name (click to show modal) -->
                         <li>
-                            <button id="autoUpdateToggle" class="dropdown-item d-flex align-items-center" type="button" onclick="toggleAutoUpdate()" title="切换自动更新">
+                            <button class="dropdown-item d-flex align-items-center" onclick="SettingsManager.showUserInfoModal()" title="用户信息">
+                                <i class="bi bi-person-circle me-2"></i>
+                                <span id="currentUsername">admin</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Auto update control button -->
+                        <li>
+                            <button id="autoUpdateToggle" class="dropdown-item d-flex align-items-center" type="button" onclick="Utils.toggleAutoUpdate()" title="切换自动更新">
                                 <i class="bi bi-play-circle me-2"></i>
                                 <span>启动自动更新</span>
                             </button>
                         </li>
                         <li>
-                            <button id="manualUpdateBtn" class="dropdown-item d-flex align-items-center" type="button" onclick="manualUpdate()" title="立即更新所有直播间">
+                            <button id="manualUpdateBtn" class="dropdown-item d-flex align-items-center" type="button" onclick="Utils.manualUpdate()" title="立即更新所有直播间">
                                 <i class="bi bi-arrow-clockwise me-2"></i>
                                 <span>立即手动更新</span>
                             </button>
                         </li>
-                        <!-- API设置 -->
-                        <li>
-                            <button class="dropdown-item d-flex align-items-center" onclick="showApiSettingsModal()" title="API设置">
-                                <i class="bi bi-gear me-2"></i>
-                                <span>抖音API设置</span>
-                            </button>
-                        </li>
-                        <!-- 刷新频率设置 -->
-                        <li>
-                            <button class="dropdown-item d-flex align-items-center" onclick="showRefreshSettingsModal()" title="刷新频率设置">
-                                <i class="bi bi-clock me-2"></i>
-                                <span>刷新频率设置</span>
-                            </button>
-                        </li>
-                        <!-- 添加直播间 -->
+                        
+                        <!-- Add room -->
                         <li>
                             <button class="dropdown-item d-flex align-items-center" onclick="modalManager.showAddModal()" title="添加直播间">
                                 <i class="bi bi-plus-lg me-2"></i>
                                 <span>添加新直播间</span>
                             </button>
+                        </li>
+                        
+                        <!-- Settings button -->
+                        <li>
+                            <button class="dropdown-item d-flex align-items-center" onclick="SettingsManager.showSettingsModal()" title="设置">
+                                <i class="bi bi-gear me-2"></i>
+                                <span>设置</span>
+                            </button>
+                        </li>
+                        
+                        <!-- Admin menu item -->
+                        <li id="adminMenuItem" style="display: none;">
+                            <a class="dropdown-item d-flex align-items-center" href="#" onclick="AdminManager.showAdminModal()">
+                                <i class="bi bi-shield-lock me-2"></i>
+                                <span>管理员控制台</span>
+                            </a>
+                        </li>
+                        
+                        <!-- Logout -->
+                        <li>
+                            <a class="dropdown-item d-flex align-items-center" href="#" id="logoutButton">
+                                <i class="bi bi-box-arrow-right me-2"></i>
+                                <span>退出登录</span>
+                            </a>
                         </li>
                     </ul>
                 </div>
@@ -90,8 +109,8 @@
 
     <div class="container-fluid px-4">
         <div class="room-container" id="roomContainer">
-            <!-- 初始状态下显示空状态 -->
-            <div class="empty-state" id="emptyState" style="grid-column: 1 / -1;">
+            <!-- Initial empty state -->
+            <div class="empty-state" id="emptyState">
                 <i class="bi bi-cloud-plus" style="font-size: 48px; color: #bdc3c7;"></i>
                 <h4 class="mt-3">暂无直播间</h4>
                 <p>点击右上角的"添加直播间"按钮开始添加你想要的直播间</p>
@@ -99,7 +118,7 @@
         </div>
     </div>
 
-    <!-- API设置模态框 -->
+    <!-- API settings modal -->
     <div class="modal fade" id="apiSettingsModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -117,13 +136,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="saveApiSettings()">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="SettingsManager.saveApiSettings()">保存</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 刷新频率设置模态框 -->
+    <!-- Refresh settings modal -->
     <div class="modal fade" id="refreshSettingsModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -133,21 +152,21 @@
                 </div>
                 <div class="modal-body">
                     <div class="mb-3">
-                        <label class="form-label">刷新频率（分钟）</label>
+                        <label class="form-label">Refresh frequency (minutes)</label>
                         <input type="number" class="form-control" id="refreshInterval"
-                               placeholder="请输入刷新频率（分钟）" min="1" step="1">
-                        <div class="form-text">请输入正整数，例如：5、10、15、30等</div>
+                               placeholder="Please enter refresh frequency (minutes)" min="1" step="1">
+                        <div class="form-text">Please enter positive integers, e.g., 5, 10, 15, 30</div>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="saveRefreshSettings()">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="SettingsManager.saveRefreshSettings()">保存</button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- 添加直播间模态框 -->
+    <!-- Add room modal -->
     <div class="modal fade" id="addModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -170,7 +189,7 @@
         </div>
     </div>
     
-    <!-- 创建分组模态框 -->
+    <!-- Create group modal -->
     <div class="modal fade" id="createGroupModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -187,13 +206,13 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="createNewGroup()">创建</button>
+                    <button type="button" class="btn btn-primary" onclick="GroupManager.createNewGroup()">创建</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 分组设置模态框 -->
+    <!-- Group assignment modal -->
     <div class="modal fade" id="groupAssignmentModal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -204,26 +223,26 @@
                 <div class="modal-body">
                     <input type="hidden" id="groupAssignmentRoomUrl">
                     <div class="mb-3">
-                        <label class="form-label">选择分组（可多选）</label>
+                        <label class="form-label">Select groups (multiple selection allowed)</label>
                         <div id="groupCheckboxes">
-                            <!-- 分组复选框将在这里动态生成 -->
+                            <!-- Group checkboxes will be generated dynamically here -->
                         </div>
                     </div>
                     <div class="mb-3">
-                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="showCreateGroupModalFromAssignment()">
+                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="GroupManager.showCreateGroupModalFromAssignment()">
                             <i class="bi bi-plus-circle"></i> 创建新分组
                         </button>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                    <button type="button" class="btn btn-primary" onclick="saveGroupAssignment()">保存</button>
+                    <button type="button" class="btn btn-primary" onclick="GroupManager.saveGroupAssignment()">保存</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- 直播间选项对话框 -->
+    <!-- Room options dialog -->
     <div class="modal fade" id="roomOptionsModal" tabindex="-1">
         <div class="modal-dialog modal-dialog-centered modal-sm">
             <div class="modal-content">
@@ -237,16 +256,16 @@
                     <input type="hidden" id="roomOptionsUrl">
                     <input type="hidden" id="roomOptionsAnchorName">
                     
-                    <!-- 直播封面 -->
+                    <!-- Live cover -->
                     <div class="mb-3">
                         <img id="roomOptionsCover" src="" alt="直播封面" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
                     </div>
                     
                     <div class="d-grid gap-2">
-                        <button type="button" class="btn btn-outline-primary" onclick="openGroupAssignmentFromOptions()">
+                        <button type="button" class="btn btn-outline-primary" onclick="RoomOperations.openGroupAssignmentFromOptions()">
                             <i class="bi bi-folder-plus"></i> 设置分组
                         </button>
-                        <button type="button" class="btn btn-outline-danger" onclick="deleteRoomFromOptions()">
+                        <button type="button" class="btn btn-outline-danger" onclick="RoomOperations.deleteRoomFromOptions()">
                             <i class="bi bi-x-lg"></i> 取消关注
                         </button>
                     </div>
@@ -258,65 +277,272 @@
         </div>
     </div>
 
-    <!-- 基础配置 -->
+    <!-- User info modal -->
+    <div class="modal fade" id="userInfoModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">用户信息</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="userInfoUsername" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">用户头像</label>
+                        <div class="d-flex align-items-center">
+                            <img id="userInfoAvatar" src="" alt="用户头像" class="rounded-circle me-3" style="width: 64px; height: 64px; object-fit: cover;">
+                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="SettingsManager.changeUserAvatar()">更换头像</button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">新密码</label>
+                        <input type="password" class="form-control" id="userInfoNewPassword" placeholder="留空表示不修改">
+                        <div class="form-text">密码长度至少为6位</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">确认新密码</label>
+                        <input type="password" class="form-control" id="userInfoConfirmPassword" placeholder="再次输入新密码">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="SettingsManager.saveUserInfo()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Settings modal -->
+    <div class="modal fade" id="settingsModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">设置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Douyin API settings -->
+                    <div class="mb-4">
+                        <h6 class="mb-3">抖音API设置</h6>
+                        <div class="mb-3">
+                            <label class="form-label">抖音API地址</label>
+                            <input type="text" class="form-control" id="settingsDouyinApiUrl"
+                                   placeholder="请输入抖音API基础地址">
+                            <div class="form-text">默认使用 https://douyin.wtf</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Refresh frequency settings -->
+                    <div class="mb-3">
+                        <h6 class="mb-3">刷新频率设置</h6>
+                        <div class="mb-3">
+                            <label class="form-label">Refresh frequency (minutes)</label>
+                            <input type="number" class="form-control" id="settingsRefreshInterval"
+                                   placeholder="Please enter refresh frequency (minutes)" min="1" step="1">
+                            <div class="form-text">Please enter positive integers, e.g., 5, 10, 15, 30</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="SettingsManager.saveSettings()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin console modal -->
+    <div class="modal fade" id="adminModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="bi bi-gear-fill me-2"></i> 管理员控制台
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Registration control -->
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">注册控制</h6>
+                            <div class="form-check form-switch">
+                                <input class="form-check-input" type="checkbox" id="allowRegistrationSwitch">
+                                <label class="form-check-label" for="allowRegistrationSwitch">
+                                    允许新用户注册
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- User management -->
+                    <div class="card mb-3">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h6 class="mb-0">用户管理</h6>
+                            <button type="button" class="btn btn-sm btn-primary" onclick="AdminManager.showCreateUserModal()">
+                                <i class="bi bi-person-plus"></i> 添加用户
+                            </button>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead>
+                                        <tr>
+                                            <th>用户名</th>
+                                            <th>角色</th>
+                                            <th>创建时间</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="usersTableBody">
+                                        <!-- User list will be generated dynamically here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
+                    <button type="button" class="btn btn-primary" onclick="AdminManager.saveAdminConfig()">保存设置</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit user permissions modal -->
+    <div class="modal fade" id="editUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">编辑用户权限</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="editUsername" readonly>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">新密码（留空表示不修改）</label>
+                        <input type="password" class="form-control" id="editPassword" placeholder="留空表示不修改">
+                        <div class="form-text">密码长度至少为6位</div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" id="editIsAdmin">
+                            <label class="form-check-label" for="editIsAdmin">
+                                管理员权限
+                            </label>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <small class="text-muted">
+                            注意：修改权限后需要用户重新登录生效
+                        </small>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="AdminManager.saveUserPermissions()">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Create user modal -->
+    <div class="modal fade" id="createUserModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">创建新用户</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label">用户名</label>
+                        <input type="text" class="form-control" id="newUsername" placeholder="请输入用户名">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">密码</label>
+                        <input type="password" class="form-control" id="newPassword" placeholder="请输入密码">
+                        <div class="form-text">密码长度至少为6位</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">确认密码</label>
+                        <input type="password" class="form-control" id="newConfirmPassword" placeholder="请再次输入密码">
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="newUserIsAdmin">
+                            <label class="form-check-label" for="newUserIsAdmin">
+                                管理员权限
+                            </label>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" onclick="AdminManager.createNewUser()">创建用户</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Basic configuration -->
     <script src="{{ url_for('static', filename='js/config.js') }}"></script>
     
-    <!-- 工具模块 -->
+    <!-- Tool modules -->
     <script src="{{ url_for('static', filename='js/cache.js') }}"></script>
     <script src="{{ url_for('static', filename='js/api.js') }}"></script>
     <script src="{{ url_for('static', filename='js/platform.js') }}"></script>
     
-    <!-- 核心模块 -->
+    <!-- Core modules -->
     <script src="{{ url_for('static', filename='js/modules/stateManager.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modules/roomRenderer.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modules/roomManager.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modules/modalManager.js') }}"></script>
     <script src="{{ url_for('static', filename='js/modules/timerService.js') }}"></script>
     
-    <!-- Bootstrap框架 -->
+    <!-- Bootstrap framework -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- 应用初始化 -->
+    <!-- Application modules -->
+    <script src="{{ url_for('static', filename='js/modules/auth.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/admin.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/groupManager.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/settings.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/utils.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/modules/roomOperations.js') }}"></script>
+    
+    <!-- Application initialization -->
     <script>
-        // 主题切换功能
-        function initThemeToggle() {
-            const themeToggle = document.getElementById('themeToggle');
-            const themeIcon = themeToggle.querySelector('i');
-            
-            // 检查本地存储中的主题设置
-            const savedTheme = localStorage.getItem('theme');
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-            
-            // 设置当前主题
-            let currentTheme;
-            if (savedTheme) {
-                currentTheme = savedTheme;
-            } else {
-                currentTheme = systemPrefersDark ? 'dark' : 'light';
-            }
-            
-            // 应用主题
-            document.documentElement.setAttribute('data-theme', currentTheme);
-            themeIcon.className = currentTheme === 'dark' ? 'bi bi-sun' : 'bi bi-moon';
-            
-            // 主题切换事件
-            themeToggle.addEventListener('click', () => {
-                const currentTheme = document.documentElement.getAttribute('data-theme');
-                const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-                
-                // 应用新主题
-                document.documentElement.setAttribute('data-theme', newTheme);
-                localStorage.setItem('theme', newTheme);
-                
-                // 更新图标
-                themeIcon.className = newTheme === 'dark' ? 'bi bi-sun' : 'bi bi-moon';
-            });
-        }
-        
         // 创建核心实例
         const roomRenderer = new RoomRenderer('roomContainer', 'emptyState');
         const roomManager = new RoomManager(stateManager, roomRenderer);
         const modalManager = new ModalManager();
+        
+        // 添加登出按钮事件监听器
+        document.addEventListener('DOMContentLoaded', function() {
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    if (typeof AuthManager !== 'undefined') {
+                        AuthManager.logout();
+                    } else {
+                        console.error('AuthManager is not defined');
+                        // Fallback: clear local storage and redirect to login
+                        localStorage.removeItem(CONFIG.CACHE_KEY);
+                        localStorage.removeItem(CONFIG.CACHE_TIMESTAMP);
+                        window.location.href = '/login';
+                    }
+                });
+            }
+        });
         
         // 状态变化监听
         stateManager.addListener((rooms) => {
@@ -325,23 +551,43 @@
             roomRenderer.renderRooms(currentGroupRooms);
             
             // 更新分组菜单
-            updateGroupMenu();
+            GroupManager.updateGroupMenu();
         });
         
         // 页面加载完成后的初始化
         document.addEventListener('DOMContentLoaded', async () => {
+            // 初始化用户认证（必须在最前面）
+            AuthManager.initUserAuth();
+            
             // 初始化主题切换
-            initThemeToggle();
+            Utils.initThemeToggle();
             
             // 初始化模态框管理器
             modalManager.init();
             modalManager.bindEnterKey(roomManager);
             
+            // 添加登出按钮事件监听器
+            const logoutButton = document.getElementById('logoutButton');
+            if (logoutButton) {
+                logoutButton.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    if (typeof AuthManager !== 'undefined') {
+                        AuthManager.logout();
+                    } else {
+                        console.error('AuthManager is not defined');
+                        // Fallback: clear local storage and redirect to login
+                        localStorage.removeItem(CONFIG.CACHE_KEY);
+                        localStorage.removeItem(CONFIG.CACHE_TIMESTAMP);
+                        window.location.href = '/login';
+                    }
+                });
+            }
+            
             // 加载分组数据
-            loadGroups();
+            GroupManager.loadGroups();
             
             // 加载抖音API配置
-            loadDouyinConfig();
+            Utils.loadDouyinConfig();
             
             // 优先使用缓存数据
             const cached = CacheManager.loadFromCache();
@@ -358,713 +604,12 @@
             
             // 页面加载完成后触发一次后台更新
             setTimeout(() => {
-                updateRoomsInBackground();
+                RoomOperations.updateRoomsInBackground();
             }, 1000);
             
             // 初始化定时更新服务
-            await initTimerService();
+            await Utils.initTimerService();
         });
-        
-        // 加载分组数据
-        async function loadGroups() {
-            try {
-                const response = await APIManager.getGroups();
-                if (response.success) {
-                    stateManager.setGroups(response.groups);
-                    updateGroupMenu();
-                }
-            } catch (error) {
-                console.error('加载分组失败:', error);
-            }
-        }
-        
-        // 加载抖音API配置
-        async function loadDouyinConfig() {
-            try {
-                const response = await APIManager.getDouyinConfig();
-                if (response.success) {
-                    const config = response.config;
-                    // 如果有配置，更新本地存储
-                    if (config.api_url) {
-                        localStorage.setItem('douyin_api_url', config.api_url);
-                    }
-                }
-            } catch (error) {
-                console.error('加载抖音API配置失败:', error);
-            }
-        }
-        
-        // 更新分组菜单
-        function updateGroupMenu() {
-            const groupMenu = document.getElementById('groupMenu');
-            const groups = stateManager.getGroups();
-            const currentGroup = stateManager.getCurrentGroup();
-            
-            if (!groupMenu) return;
-            
-            // 清空现有菜单项
-            groupMenu.innerHTML = '';
-            
-            // 定义系统分组的显示顺序
-            const systemGroupOrder = ["全部关注", "特别关注", "直播中", "未开播"];
-            
-            // 先添加指定顺序的系统分组
-            systemGroupOrder.forEach(groupName => {
-                if (groups[groupName]) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a class="dropdown-item ${currentGroup === groupName ? 'active' : ''}" 
-                                      href="#" onclick="selectGroup('${groupName}')">${groupName}</a>`;
-                    groupMenu.appendChild(li);
-                }
-            });
-            
-            // 再添加其他自定义分组
-            Object.keys(groups).forEach(groupName => {
-                // 跳过已添加的系统分组
-                if (!systemGroupOrder.includes(groupName)) {
-                    const li = document.createElement('li');
-                    li.innerHTML = `<a class="dropdown-item ${currentGroup === groupName ? 'active' : ''}" 
-                                      href="#" onclick="selectGroup('${groupName}')">${groupName}</a>`;
-                    groupMenu.appendChild(li);
-                }
-            });
-            
-            // 添加分隔线
-            const divider = document.createElement('li');
-            divider.innerHTML = '<hr class="dropdown-divider">';
-            groupMenu.appendChild(divider);
-            
-            // 添加创建新分组选项
-            const createLi = document.createElement('li');
-            createLi.innerHTML = '<a class="dropdown-item" href="#" onclick="showCreateGroupModal()"><i class="bi bi-plus-circle"></i> 创建新分组</a>';
-            groupMenu.appendChild(createLi);
-            
-            // 更新当前分组显示
-            document.getElementById('currentGroupName').textContent = currentGroup;
-        }
-        
-        // 选择分组
-        function selectGroup(groupName) {
-            stateManager.setCurrentGroup(groupName);
-        }
-        
-        // 显示创建分组模态框
-        function showCreateGroupModal() {
-            const modal = new bootstrap.Modal(document.getElementById('createGroupModal'));
-            modal.show();
-        }
-        
-        // 创建新分组
-        async function createNewGroup() {
-            const groupNameInput = document.getElementById('newGroupName');
-            const groupName = groupNameInput.value.trim();
-            
-            if (!groupName) {
-                alert('请输入分组名称');
-                return;
-            }
-            
-            try {
-                const response = await APIManager.createGroup(groupName);
-                if (response.success) {
-                    stateManager.setGroups(response.groups);
-                    const modal = bootstrap.Modal.getInstance(document.getElementById('createGroupModal'));
-                    modal.hide();
-                    groupNameInput.value = '';
-                    
-                    // 如果是从分组设置界面创建的，需要更新分组复选框
-                    if (document.getElementById('groupAssignmentModal').classList.contains('show')) {
-                        const roomUrl = document.getElementById('groupAssignmentRoomUrl').value;
-                        showGroupAssignmentModal(roomUrl);
-                    }
-                } else {
-                    alert(response.error || '创建分组失败');
-                }
-            } catch (error) {
-                alert('创建分组失败: ' + error.message);
-            }
-        }
-        
-        // 显示分组设置模态框
-        function showGroupAssignmentModal(roomUrl) {
-            document.getElementById('groupAssignmentRoomUrl').value = roomUrl;
-            
-            const groups = stateManager.getGroups();
-            const groupCheckboxes = document.getElementById('groupCheckboxes');
-            
-            // 生成分组复选框（排除系统分组）
-            let checkboxesHtml = '';
-            
-            // 定义系统分组的显示顺序（在设置分组中只显示特别关注）
-            const systemGroupOrder = ["特别关注"];
-            
-            // 先添加指定顺序的系统分组
-            systemGroupOrder.forEach(groupName => {
-                if (groups[groupName] && (groups[groupName].type === 'system' || groupName === '特别关注')) {
-                    const isChecked = groups[groupName].rooms.includes(roomUrl);
-                    checkboxesHtml += `
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
-                                   id="group_${groupName}" 
-                                   value="${groupName}" 
-                                   ${isChecked ? 'checked' : ''}>
-                            <label class="form-check-label" for="group_${groupName}">
-                                ${groupName}
-                            </label>
-                        </div>
-                    `;
-                }
-            });
-            
-            // 再添加其他自定义分组
-            Object.keys(groups).forEach(groupName => {
-                // 只显示自定义分组（跳过系统分组和已添加的特别关注）
-                if (groups[groupName].type === 'custom') {
-                    const isChecked = groups[groupName].rooms.includes(roomUrl);
-                    checkboxesHtml += `
-                        <div class="form-check">
-                            <input class="form-check-input" type="checkbox" 
-                                   id="group_${groupName}" 
-                                   value="${groupName}" 
-                                   ${isChecked ? 'checked' : ''}>
-                            <label class="form-check-label" for="group_${groupName}">
-                                ${groupName}
-                            </label>
-                        </div>
-                    `;
-                }
-            });
-            
-            groupCheckboxes.innerHTML = checkboxesHtml;
-            
-            const modal = new bootstrap.Modal(document.getElementById('groupAssignmentModal'));
-            modal.show();
-        }
-        
-        // 从分组设置界面显示创建分组模态框
-        function showCreateGroupModalFromAssignment() {
-            const groupModal = bootstrap.Modal.getInstance(document.getElementById('groupAssignmentModal'));
-            groupModal.hide();
-            
-            setTimeout(() => {
-                showCreateGroupModal();
-            }, 300);
-        }
-        
-        // 保存分组设置
-        async function saveGroupAssignment() {
-            const roomUrl = document.getElementById('groupAssignmentRoomUrl').value;
-            const groups = stateManager.getGroups();
-            const checkboxes = document.querySelectorAll('#groupCheckboxes input[type="checkbox"]');
-            
-            try {
-                // 收集需要更新的分组
-                const updates = [];
-                
-                checkboxes.forEach(checkbox => {
-                    const groupName = checkbox.value;
-                    const isChecked = checkbox.checked;
-                    const isCurrentlyInGroup = groups[groupName].rooms.includes(roomUrl);
-                    
-                    // 如果状态发生变化，需要更新
-                    if (isChecked !== isCurrentlyInGroup) {
-                        updates.push({
-                            groupName: groupName,
-                            action: isChecked ? 'add' : 'remove'
-                        });
-                    }
-                });
-                
-                // 依次执行更新操作
-                for (const update of updates) {
-                    const response = await APIManager.updateGroup(update.groupName, roomUrl, update.action);
-                    if (!response.success) {
-                        throw new Error(response.error || '更新分组失败');
-                    }
-                    // 更新本地状态
-                    if (update.action === 'add') {
-                        if (!groups[update.groupName].rooms.includes(roomUrl)) {
-                            groups[update.groupName].rooms.push(roomUrl);
-                        }
-                    } else {
-                        const index = groups[update.groupName].rooms.indexOf(roomUrl);
-                        if (index > -1) {
-                            groups[update.groupName].rooms.splice(index, 1);
-                        }
-                    }
-                }
-                
-                // 更新状态管理器
-                stateManager.setGroups(groups);
-                
-                // 关闭模态框
-                const modal = bootstrap.Modal.getInstance(document.getElementById('groupAssignmentModal'));
-                modal.hide();
-                
-            } catch (error) {
-                alert('保存分组设置失败: ' + error.message);
-            }
-        }
-        
-        // 显示直播间选项对话框
-        function showRoomOptionsDialog(roomUrl, anchorName) {
-            document.getElementById('roomOptionsUrl').value = roomUrl;
-            document.getElementById('roomOptionsAnchorName').value = anchorName;
-            
-            // 获取房间信息并设置模态框标题、头像和封面
-            const rooms = stateManager.getRooms();
-            const room = rooms.find(r => r.url === roomUrl);
-            
-            const titleElement = document.getElementById('roomOptionsTitle');
-            const avatarElement = document.getElementById('roomOptionsAvatar');
-            const coverElement = document.getElementById('roomOptionsCover');
-            
-            if (room) {
-                titleElement.textContent = anchorName;  // 移除"的直播间"后缀
-                avatarElement.src = room.avatar || CONFIG.IMAGES.defaultAvatar;
-                avatarElement.onerror = function() {
-                    this.src = CONFIG.IMAGES.defaultAvatar;
-                    this.style.filter = 'grayscale(100%)';
-                };
-                
-                // 设置封面
-                if (coverElement) {
-                    coverElement.src = room.cover || CONFIG.IMAGES.defaultCover;
-                    coverElement.onerror = function() {
-                        this.src = CONFIG.IMAGES.defaultCover;
-                        this.style.filter = 'grayscale(100%)';
-                    };
-                }
-            } else {
-                titleElement.textContent = anchorName;  // 移除"的直播间"后缀
-                avatarElement.src = CONFIG.IMAGES.defaultAvatar;
-                if (coverElement) {
-                    coverElement.src = CONFIG.IMAGES.defaultCover;
-                }
-            }
-            
-            const modal = new bootstrap.Modal(document.getElementById('roomOptionsModal'));
-            modal.show();
-        }
-        
-        // 从选项对话框打开分组设置
-        function openGroupAssignmentFromOptions() {
-            const roomUrl = document.getElementById('roomOptionsUrl').value;
-            
-            // 关闭当前对话框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('roomOptionsModal'));
-            modal.hide();
-            
-            // 延迟显示分组设置对话框
-            setTimeout(() => {
-                showGroupAssignmentModal(roomUrl);
-            }, 300);
-        }
-        
-        // 从选项对话框删除房间
-        function deleteRoomFromOptions() {
-            const roomUrl = document.getElementById('roomOptionsUrl').value;
-            const anchorName = document.getElementById('roomOptionsAnchorName').value;
-            
-            // 关闭当前对话框
-            const modal = bootstrap.Modal.getInstance(document.getElementById('roomOptionsModal'));
-            modal.hide();
-            
-            // 确认删除
-            setTimeout(() => {
-                if (confirm(`确定要取消关注 "${anchorName}" 的直播间吗？`)) {
-                    roomManager.deleteRoom(roomUrl);
-                }
-            }, 300);
-        }
-        
-        // 确认删除房间
-        function confirmDeleteRoom(roomUrl, anchorName) {
-            if (confirm(`确定要取消关注 "${anchorName}" 的直播间吗？`)) {
-                roomManager.deleteRoom(roomUrl);
-            }
-        }
-        
-        // 后台更新房间信息（混合模式）
-        async function updateRoomsInBackground() {
-            // 显示刷新指示器
-            const refreshIndicator = document.getElementById('refreshIndicator');
-            if (refreshIndicator) {
-                refreshIndicator.classList.remove('d-none');
-            }
-            
-            try {
-                console.log("开始后台增量更新直播间信息...");
-                
-                // 首先获取需要更新的房间列表
-                const response = await APIManager.incrementalUpdateAll();
-                if (!response.success) {
-                    console.error("获取房间列表失败:", response.error);
-                    return;
-                }
-                
-                const roomsToUpdate = response.rooms_to_update;
-                console.log("需要更新", roomsToUpdate.length, "个直播间");
-                
-                // 逐个更新房间信息
-                let updatedCount = 0;
-                let changedCount = 0;
-                
-                for (const roomUrl of roomsToUpdate) {
-                    try {
-                        const updateResponse = await APIManager.incrementalUpdateRoom(roomUrl);
-                        if (updateResponse.success) {
-                            updatedCount++;
-                            
-                            // 更新状态管理器中的数据
-                            stateManager.updateRoom(updateResponse.room_data);
-                            
-                            // 更新UI显示
-                            roomRenderer.updateRoomCard(updateResponse.room_data);
-                            
-                            // 如果有变化，更新分组信息
-                            if (updateResponse.has_changes) {
-                                changedCount++;
-                                // 更新分组信息
-                                await updateRoomGroupsIfNeeded(updateResponse.room_data);
-                            }
-                            
-                            console.log("已更新直播间:", updateResponse.room_data.anchor);
-                        }
-                    } catch (error) {
-                        console.error("更新直播间失败:", roomUrl, error);
-                    }
-                    
-                    // 添加小延迟避免请求过于频繁
-                    await new Promise(resolve => setTimeout(resolve, 100));
-                }
-                
-                console.log(`后台更新完成，共更新${updatedCount}个直播间，${changedCount}个有变化`);
-                
-                // 更新完成后保存缓存
-                CacheManager.saveToCache(stateManager.getRooms());
-                
-            } catch (error) {
-                console.error("后台更新出错:", error);
-            } finally {
-                // 隐藏刷新指示器
-                if (refreshIndicator) {
-                    refreshIndicator.classList.add('d-none');
-                }
-            }
-        }
-        
-        // 初始化定时更新服务
-        async function initTimerService() {
-            // 加载刷新频率设置
-            await timerService.loadRefreshSettings();
-            
-            // 检查本地存储的开关状态
-            const isSwitchOn = timerService.loadSwitchState();
-            
-            // 如果开关是打开的，启动定时更新服务
-            if (isSwitchOn) {
-                timerService.start();
-            }
-            
-            // 监听页面关闭事件，停止定时器
-            window.addEventListener('beforeunload', () => {
-                timerService.stop();
-            });
-            
-            // 添加更新监听器，用于更新UI
-            timerService.addUpdateListener((data) => {
-                console.log("定时更新完成:", data);
-                // 可以在这里处理更新后的UI反馈
-                
-                // 如果当前在系统分组中，更新分组信息
-                const currentGroup = stateManager.getCurrentGroup();
-                if (currentGroup === "直播中" || currentGroup === "未开播") {
-                    updateRoomGroupsIfNeeded();
-                }
-            });
-        }
-        
-        // 切换定时更新开关
-        function toggleAutoUpdate() {
-            const isRunning = timerService.toggle();
-            
-            // 更新UI状态
-            const toggleBtn = document.getElementById('autoUpdateToggle');
-            if (toggleBtn) {
-                // 保持统一样式，只更新图标和文本
-                if (isRunning) {
-                    toggleBtn.innerHTML = '<i class="bi bi-pause-circle me-2"></i><span>停止自动更新</span>';
-                } else {
-                    toggleBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i><span>启动自动更新</span>';
-                }
-                // 保持dropdown-item样式不变
-                toggleBtn.className = 'dropdown-item d-flex align-items-center';
-            }
-            
-            // 显示状态提示
-            const statusText = document.getElementById('autoUpdateStatus');
-            if (statusText) {
-                statusText.textContent = isRunning ? '自动更新已启动' : '自动更新已停止';
-                statusText.className = isRunning ? 'text-success' : 'text-muted';
-            }
-        }
-        
-        // 手动触发更新
-        async function manualUpdate() {
-            const updateBtn = document.getElementById('manualUpdateBtn');
-            const refreshIndicator = document.getElementById('refreshIndicator');
-            if (updateBtn) {
-                updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 更新中...';
-                updateBtn.disabled = true;
-            }
-            // 显示刷新指示器
-            if (refreshIndicator) {
-                refreshIndicator.classList.remove('d-none');
-            }
-            
-            try {
-                await timerService.updateAllRooms();
-                
-                // 显示更新成功提示
-                const toast = document.createElement('div');
-                toast.className = 'toast success';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-success mb-0" role="alert">
-                        直播间信息更新完成
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            } catch (error) {
-                console.error('手动更新失败:', error);
-                
-                // 显示更新失败提示
-                const toast = document.createElement('div');
-                toast.className = 'toast error';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-danger mb-0" role="alert">
-                        更新失败: ${error.message}
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            } finally {
-                if (updateBtn) {
-                    updateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> 立即更新';
-                    updateBtn.disabled = false;
-                }
-                // 隐藏刷新指示器
-                if (refreshIndicator) {
-                    refreshIndicator.classList.add('d-none');
-                }
-            }
-        }
-        
-        // 更新房间分组信息（如果需要）
-        async function updateRoomGroupsIfNeeded(roomData) {
-            try {
-                // 获取当前分组
-                const currentGroup = stateManager.getCurrentGroup();
-                
-                // 如果当前在"直播中"或"未开播"分组，需要更新分组信息
-                if (currentGroup === "直播中" || currentGroup === "未开播") {
-                    const response = await APIManager.updateRoomGroups(stateManager.getRooms());
-                    if (response.success) {
-                        stateManager.setGroups(response.groups);
-                    }
-                }
-            } catch (error) {
-                console.error("更新分组信息失败:", error);
-            }
-        }
-        
-        // 显示API设置模态框
-        function showApiSettingsModal() {
-            // 从本地存储加载API地址
-            const savedApiUrl = localStorage.getItem('douyin_api_url') || '';
-            document.getElementById('douyinApiUrl').value = savedApiUrl;
-            
-            const modal = new bootstrap.Modal(document.getElementById('apiSettingsModal'));
-            modal.show();
-        }
-        
-        // 保存API设置
-        async function saveApiSettings() {
-            const apiUrl = document.getElementById('douyinApiUrl').value.trim();
-            
-            try {
-                // 保存到服务器
-                const response = await APIManager.saveDouyinConfig(apiUrl);
-                if (!response.success) {
-                    throw new Error(response.error || '保存失败');
-                }
-                
-                // 保存到本地存储
-                if (apiUrl) {
-                    localStorage.setItem('douyin_api_url', apiUrl);
-                } else {
-                    localStorage.removeItem('douyin_api_url');
-                }
-                
-                // 关闭模态框
-                const modal = bootstrap.Modal.getInstance(document.getElementById('apiSettingsModal'));
-                modal.hide();
-                
-                // 显示保存成功提示
-                const toast = document.createElement('div');
-                toast.className = 'toast success';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-success mb-0" role="alert">
-                        API设置已保存
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            } catch (error) {
-                // 显示保存失败提示
-                const toast = document.createElement('div');
-                toast.className = 'toast error';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-danger mb-0" role="alert">
-                        保存失败: ${error.message}
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }
-        }
-        
-        // 显示刷新频率设置模态框
-        async function showRefreshSettingsModal() {
-            try {
-                // 从服务器加载当前设置
-                const response = await APIManager.getRefreshSettings();
-                if (response.success) {
-                    document.getElementById('refreshInterval').value = response.settings.refresh_interval;
-                } else {
-                    console.warn("加载刷新频率设置失败:", response.error);
-                    // 使用默认值10分钟
-                    document.getElementById('refreshInterval').value = 10;
-                }
-            } catch (error) {
-                console.warn("加载刷新频率设置出错:", error);
-                // 使用默认值10分钟
-                document.getElementById('refreshInterval').value = 10;
-            }
-            
-            const modal = new bootstrap.Modal(document.getElementById('refreshSettingsModal'));
-            modal.show();
-        }
-        
-        // 保存刷新频率设置
-        async function saveRefreshSettings() {
-            const intervalInput = document.getElementById('refreshInterval');
-            const intervalValue = intervalInput.value.trim();
-            
-            // 输入验证
-            if (!intervalValue) {
-                alert('请输入刷新频率');
-                return;
-            }
-            
-            const interval = parseInt(intervalValue);
-            if (isNaN(interval) || interval <= 0) {
-                alert('刷新频率必须是正整数');
-                return;
-            }
-            
-            try {
-                // 保存到服务器
-                const response = await APIManager.saveRefreshSettings(interval);
-                if (!response.success) {
-                    throw new Error(response.error || '保存失败');
-                }
-                
-                // 更新定时服务中的刷新频率
-                await timerService.setRefreshInterval(interval);
-                
-                // 关闭模态框
-                const modal = bootstrap.Modal.getInstance(document.getElementById('refreshSettingsModal'));
-                modal.hide();
-                
-                // 显示保存成功提示
-                const toast = document.createElement('div');
-                toast.className = 'toast success';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-success mb-0" role="alert">
-                        刷新频率已设置为 ${interval} 分钟
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            } catch (error) {
-                // 显示保存失败提示
-                const toast = document.createElement('div');
-                toast.className = 'toast error';
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 70px;
-                    right: 20px;
-                    z-index: 9999;
-                    pointer-events: none;
-                    animation: slideIn 0.3s ease-in-out;
-                `;
-                toast.innerHTML = `
-                    <div class="alert alert-danger mb-0" role="alert">
-                        保存失败: ${error.message}
-                    </div>
-                `;
-                
-                document.body.appendChild(toast);
-                setTimeout(() => toast.remove(), 3000);
-            }
-        }
     </script>
 </body>
 </html>

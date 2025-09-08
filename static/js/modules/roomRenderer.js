@@ -7,41 +7,53 @@ class RoomRenderer {
     
     // 渲染房间列表
     renderRooms(rooms) {
-        // 显示/隐藏空状态
-        this.emptyState.style.display = rooms.length === 0 ? 'block' : 'none';
-        
-        // 按新的优先级规则排序：
-        // 1. 直播状态优先（直播中 > 未开播）
-        // 2. 特别关注分组优先（但未开播的特别关注不能在开播的非特别关注之前）
-        // 3. 人气值高低（高人气 > 低人气）
-        const sortedRooms = [...rooms].sort((a, b) => {
-            // 首先按直播状态排序：直播中的房间优先
-            if (a.is_live && !b.is_live) return -1;
-            if (!a.is_live && b.is_live) return 1;
+        // 当没有房间时，给容器添加empty类以居中空状态
+        if (rooms.length === 0) {
+            this.container.classList.add('empty');
+            // 清空容器内容，只保留空状态元素
+            this.container.innerHTML = '';
+            this.container.appendChild(this.emptyState);
+            // 确保空状态显示
+            this.emptyState.style.display = 'block';
+        } else {
+            this.container.classList.remove('empty');
+            // 隐藏空状态
+            this.emptyState.style.display = 'none';
             
-            // 如果直播状态相同，再检查是否是特别关注房间
-            const aIsSpecial = stateManager.groups["特别关注"] && 
-                              stateManager.groups["特别关注"].rooms.includes(a.url);
-            const bIsSpecial = stateManager.groups["特别关注"] && 
-                              stateManager.groups["特别关注"].rooms.includes(b.url);
+            // 按新的优先级规则排序：
+            // 1. 直播状态优先（直播中 > 未开播）
+            // 2. 特别关注分组优先（但未开播的特别关注不能在开播的非特别关注之前）
+            // 3. 人气值高低（高人气 > 低人气）
+            const sortedRooms = [...rooms].sort((a, b) => {
+                // 首先按直播状态排序：直播中的房间优先
+                if (a.is_live && !b.is_live) return -1;
+                if (!a.is_live && b.is_live) return 1;
+                
+                // 如果直播状态相同，再检查是否是特别关注房间
+                const groups = stateManager.getGroups();
+                const aIsSpecial = groups["特别关注"] && 
+                                  groups["特别关注"].rooms.includes(a.url);
+                const bIsSpecial = groups["特别关注"] && 
+                                  groups["特别关注"].rooms.includes(b.url);
+                
+                // 特别关注的房间优先（但仅在相同直播状态下）
+                if (aIsSpecial && !bIsSpecial) return -1;
+                if (!aIsSpecial && bIsSpecial) return 1;
+                
+                // 如果直播状态和特别关注分组都相同，按人气值排序
+                const aPopularNum = parseInt(a.popular_num) || 0;
+                const bPopularNum = parseInt(b.popular_num) || 0;
+                
+                if (aPopularNum > bPopularNum) return -1;
+                if (aPopularNum < bPopularNum) return 1;
+                
+                // 人气值也相同时，保持原有顺序
+                return 0;
+            });
             
-            // 特别关注的房间优先（但仅在相同直播状态下）
-            if (aIsSpecial && !bIsSpecial) return -1;
-            if (!aIsSpecial && bIsSpecial) return 1;
-            
-            // 如果直播状态和特别关注分组都相同，按人气值排序
-            const aPopularNum = parseInt(a.popular_num) || 0;
-            const bPopularNum = parseInt(b.popular_num) || 0;
-            
-            if (aPopularNum > bPopularNum) return -1;
-            if (aPopularNum < bPopularNum) return 1;
-            
-            // 人气值也相同时，保持原有顺序
-            return 0;
-        });
-        
-        // 渲染房间卡片
-        this.container.innerHTML = sortedRooms.map(room => this.createRoomCard(room)).join('');
+            // 渲染房间卡片
+            this.container.innerHTML = sortedRooms.map(room => this.createRoomCard(room)).join('');
+        }
     }
     
     // 更新单个房间显示
@@ -96,7 +108,7 @@ class RoomRenderer {
                         }
                     </div>
                 </a>
-                <div class="card-content" onclick="showRoomOptionsDialog('${room.url}', '${room.anchor || '未知主播'}')">
+                <div class="card-content" onclick="RoomOperations.showRoomOptionsDialog('${room.url}', '${room.anchor || '未知主播'}')">
                     <div class="card-header">
                         <div class="avatar-container">
                             <img src="${room.avatar || CONFIG.IMAGES.defaultAvatar}" 

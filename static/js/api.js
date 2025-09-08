@@ -125,7 +125,7 @@ class APIManager {
     }
     
     static async incrementalUpdateAll() {
-        return await this.fetchWithErrorHandling('/incremental_update_all', {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.incrementalUpdateAll || '/incremental_update_all', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -158,6 +158,98 @@ class APIManager {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({ refresh_interval: refreshInterval })
+        });
+    }
+
+    // 用户认证API
+    static async login(username, password) {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.login, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ username: username, password: password })
+        });
+    }
+
+    static async register(username, password, confirmPassword) {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.register, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                username: username, 
+                password: password, 
+                confirm_password: confirmPassword 
+            })
+        });
+    }
+
+    static async logout() {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.logout, {
+            method: 'POST'
+        });
+    }
+
+    static async getCurrentUser() {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.getCurrentUser);
+    }
+
+    static async checkAuthStatus() {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.checkAuthStatus);
+    }
+
+    static async checkRegistrationAllowed() {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.checkRegistrationAllowed);
+    }
+
+    // 管理员功能API
+    static async adminGetUsers() {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.adminGetUsers);
+    }
+
+    static async adminCreateUser(username, password, isAdmin = false) {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.adminCreateUser, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ 
+                username: username, 
+                password: password, 
+                is_admin: isAdmin 
+            })
+        });
+    }
+
+    static async adminUpdateUser(username, password = null, isAdmin = null) {
+        const data = {};
+        if (password !== null) data.password = password;
+        if (isAdmin !== null) data.is_admin = isAdmin;
+        
+        return await this.fetchWithErrorHandling(`${CONFIG.API_ENDPOINTS.adminUpdateUser}/${username}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(data)
+        });
+    }
+
+    static async adminDeleteUser(username) {
+        return await this.fetchWithErrorHandling(`${CONFIG.API_ENDPOINTS.adminDeleteUser}/${username}`, {
+            method: 'DELETE'
+        });
+    }
+
+    static async adminUpdateConfig(allowRegistration) {
+        return await this.fetchWithErrorHandling(CONFIG.API_ENDPOINTS.adminUpdateConfig, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ allow_registration: allowRegistration })
         });
     }
 }

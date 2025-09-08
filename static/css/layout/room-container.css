@@ -8,6 +8,11 @@
     margin: 0;
 }
 
+/* 当容器为空时，居中显示空状态 */
+.room-container.empty {
+    justify-content: center;
+}
+
 /* 直播间卡片布局 */
 .room-card {
     flex: 1 1 calc(100% - 2rem);

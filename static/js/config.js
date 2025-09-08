@@ -16,7 +16,21 @@ const CONFIG = {
         updateGroup: '/update_group',
         createGroup: '/create_group',
         deleteGroup: '/delete_group',
-        updateRoomGroups: '/update_room_groups'
+        updateRoomGroups: '/update_room_groups',
+        incrementalUpdateAll: 'http://127.0.0.1:5000/incremental_update_all',
+        // 用户认证
+        login: '/login',
+        register: '/register',
+        logout: '/logout',
+        getCurrentUser: '/get_current_user',
+        checkAuthStatus: '/check_auth_status',
+        checkRegistrationAllowed: '/check_registration_allowed',
+        // 管理员功能
+        adminGetUsers: '/admin/users',
+        adminCreateUser: '/admin/users',
+        adminUpdateUser: '/admin/users',
+        adminDeleteUser: '/admin/users',
+        adminUpdateConfig: '/admin/config'
     },
     
     // 图片配置

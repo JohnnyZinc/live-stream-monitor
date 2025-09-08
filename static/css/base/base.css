@@ -50,3 +50,63 @@ body {
     padding-top: 80px;
     padding-bottom: 2rem;
 }
+
+/* 提示框样式 */
+.toast {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    z-index: 9999;
+    animation: slideIn 0.3s ease-in-out;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.toast .alert {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    margin-bottom: 0;
+    border: none;
+}
+
+[data-theme="dark"] .toast .alert {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* 成功提示框 */
+.toast .alert-success {
+    background-color: #d4edda;
+    color: #155724;
+    border-color: #c3e6cb;
+}
+
+[data-theme="dark"] .toast .alert-success {
+    background-color: #2d5a35;
+    color: #d4edda;
+    border-color: #3c763d;
+}
+
+/* 错误提示框 */
+.toast .alert-danger {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+}
+
+[data-theme="dark"] .toast .alert-danger {
+    background-color: #6a2d31;
+    color: #f8d7da;
+    border-color: #721c24;
+}
+
+/* 信息提示框 */
+.toast .alert-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+[data-theme="dark"] .toast .alert-info {
+    background-color: #2d5a5f;
+    color: #d1ecf1;
+    border-color: #3c7680;
+}
