@@ -30,34 +30,13 @@ class RoomManager {
             
         } catch (error) {
             console.error("加载失败:", error);
-            this.showToast("加载失败，请重试", "error");
+            Utils.showToast("加载失败，请重试", "danger");
         }
     }
     
         
     
     
-    // 显示提示信息
-    showToast(message, type = 'info') {
-        const toast = document.createElement('div');
-        toast.className = `toast ${type}`;
-        toast.style.cssText = `
-            position: fixed;
-            top: 70px;
-            right: 20px;
-            z-index: 9999;
-            pointer-events: none;
-            animation: slideIn 0.3s ease-in-out;
-        `;
-        toast.innerHTML = `
-            <div class="alert alert-${type} mb-0" role="alert">
-                ${message}
-            </div>
-        `;
-        
-        document.body.appendChild(toast);
-        setTimeout(() => toast.remove(), 3000);
-    }
     
     // 添加房间
     async addRoom(roomUrl) {
@@ -111,7 +90,7 @@ class RoomManager {
             
             if (data.success) {
                 this.stateManager.removeRoom(urlToRemove);
-                this.showToast('已取消关注', 'success');
+                Utils.showToast('已取消关注', 'success');
             }
         } catch (error) {
             alert('删除失败: ' + error.message);

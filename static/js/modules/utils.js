@@ -1,21 +1,26 @@
 // 工具函数模块
 class Utils {
-    // 显示提示框
+    // 显示提示框（简化测试版本）
     static showToast(message, type = 'info') {
-        // 移除已存在的同类型提示框
-        const existingToasts = document.querySelectorAll(`.toast`);
-        existingToasts.forEach(toast => toast.remove());
+        console.log('showToast called with:', message, type); // 调试日志
         
-        // 创建提示框元素
+        // 简化版本 - 直接创建并显示元素
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `
-            <div class="alert alert-${type} mb-0" role="alert">
-                ${message}
-            </div>
-        `;
+        toast.style.position = 'fixed';
+        toast.style.top = '70px';
+        toast.style.right = '20px';
+        toast.style.zIndex = '9999';
+        toast.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+        toast.style.color = type === 'success' ? '#155724' : '#721c24';
+        toast.style.padding = '10px';
+        toast.style.borderRadius = '5px';
+        toast.style.boxShadow = '0 4px 12px rgba(0, 0, 0, 0.15)';
+        toast.style.minWidth = '250px';
+        toast.style.maxWidth = '400px';
+        toast.textContent = message;
         
         document.body.appendChild(toast);
+        console.log('Toast added to document body'); // 调试日志
         
         // 3秒后自动移除
         setTimeout(() => {
