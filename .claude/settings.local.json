@@ -18,7 +18,8 @@
       "Bash(curl -s -X POST http://localhost:5000/incremental_update_room -H \"Content-Type: application/json\" -d '{\"\"room_url\"\": \"\"https://invalid-url.com/12345\"\"}')",
       "Bash(curl -s -X POST http://localhost:5000/batch_update_rooms -H \"Content-Type: application/json\")",
       "Bash(dir C:UsersJohnnyDesktopsimplelivelive_collection)",
-      "Bash(cat data/douyin_config.json)"
+      "Bash(cat data/douyin_config.json)",
+      "Bash(python -c:*)"
     ],
     "deny": [],
     "ask": []

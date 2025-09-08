@@ -223,8 +223,19 @@ def merge_room_data(old_data, new_data):
                 merged_data[field] = new_data[field]
         return merged_data
     
-    # 如果新数据正常，直接返回新数据
-    return new_data
+    # 如果新数据正常，但某些字段为空，则保留原有数据中的对应字段
+    merged_data = old_data.copy() if old_data else {}
+    merged_data.update(new_data)  # 先合并所有新数据
+    
+    # 定义关键字段，当这些字段在新数据中为空时，保留旧数据
+    critical_fields = ['title', 'anchor', 'avatar', 'cover', 'popular_num']
+    
+    for field in critical_fields:
+        # 如果新数据中的关键字段为空，但旧数据中有值，则保留旧数据
+        if field in merged_data and not merged_data[field] and old_data and old_data.get(field):
+            merged_data[field] = old_data[field]
+    
+    return merged_data
 
 def update_room_groups(rooms_data):
     """根据房间状态更新分组"""
