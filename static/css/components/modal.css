@@ -27,11 +27,21 @@
     color: var(--text-color);
 }
 
+.form-control::placeholder {
+    color: var(--muted-text);
+    opacity: 1;
+}
+
 .form-control:focus {
     background-color: var(--card-background);
     border-color: var(--primary-color);
     color: var(--text-color);
     box-shadow: 0 0 0 0.2rem rgba(123, 36, 255, 0.25);
+}
+
+.form-control:focus::placeholder {
+    color: var(--muted-text);
+    opacity: 0.8;
 }
 
 .form-label {
@@ -40,4 +50,50 @@
 
 .form-text {
     color: var(--muted-text);
+}
+
+/* 模态框按钮样式 */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: var(--success-button-hover);
+    border-color: var(--success-button-hover);
+}
+
+.btn-secondary {
+    background-color: var(--button-light);
+    border-color: var(--border-color);
+    color: var(--button-dark);
+}
+
+.btn-secondary:hover {
+    background-color: var(--button-light);
+    border-color: var(--border-color);
+    color: var(--button-dark);
+}
+
+.btn-outline-primary {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+    color: white;
+}
+
+.btn-outline-danger {
+    border-color: var(--live-color);
+    color: var(--live-color);
+}
+
+.btn-outline-danger:hover {
+    background-color: var(--live-color);
+    border-color: var(--live-color);
+    color: white;
 }

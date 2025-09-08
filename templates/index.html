@@ -21,16 +21,15 @@
             <!-- Right-aligned elements in correct order -->
             <div class="d-flex gap-2 align-items-center ms-auto">
                 <!-- Refresh indicator (rightmost) -->
-                <div id="refreshIndicator" class="spinner-border spinner-border-sm d-none" role="status" style="width: 1rem; height: 1rem;">
+                <div id="refreshIndicator" class="d-none" role="status">
+                    <i class="bi bi-arrow-repeat refresh-animation"></i>
                     <span class="visually-hidden">加载中...</span>
                 </div>
                 
-                <!-- Auto update status icon (right third) -->
-                <i id="autoUpdateStatusIcon" class="bi bi-pause-circle text-muted me-2" title="自动更新已停止"></i>
-                
+                                
                 <!-- Group selection dropdown (right second) -->
                 <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="groupDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-light" type="button" id="groupDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-collection"></i> <span id="currentGroupName">全部关注</span>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="groupDropdown" id="groupMenu">
@@ -45,39 +44,42 @@
                 
                 <!-- Settings dropdown (rightmost) -->
                 <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle" type="button" id="moreActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button class="btn btn-light" type="button" id="moreActionsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="moreActionsDropdown">
                         <!-- 自动更新控制按钮 -->
                         <li>
-                            <div class="btn-group d-flex" role="group">
-                                <button id="autoUpdateToggle" class="btn btn-success btn-sm flex-fill" onclick="toggleAutoUpdate()" title="切换自动更新">
-                                    <i class="bi bi-play-circle"></i> 启动自动更新
-                                </button>
-                                <button id="manualUpdateBtn" class="btn btn-outline-primary btn-sm" onclick="manualUpdate()" title="立即更新所有直播间">
-                                    <i class="bi bi-arrow-clockwise"></i>
-                                </button>
-                            </div>
+                            <button id="autoUpdateToggle" class="dropdown-item d-flex align-items-center" type="button" onclick="toggleAutoUpdate()" title="切换自动更新">
+                                <i class="bi bi-play-circle me-2"></i>
+                                <span>启动自动更新</span>
+                            </button>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <button id="manualUpdateBtn" class="dropdown-item d-flex align-items-center" type="button" onclick="manualUpdate()" title="立即更新所有直播间">
+                                <i class="bi bi-arrow-clockwise me-2"></i>
+                                <span>立即手动更新</span>
+                            </button>
+                        </li>
                         <!-- API设置 -->
                         <li>
-                            <button class="dropdown-item" onclick="showApiSettingsModal()" title="API设置">
-                                <i class="bi bi-gear"></i> API设置
+                            <button class="dropdown-item d-flex align-items-center" onclick="showApiSettingsModal()" title="API设置">
+                                <i class="bi bi-gear me-2"></i>
+                                <span>抖音API设置</span>
                             </button>
                         </li>
                         <!-- 刷新频率设置 -->
                         <li>
-                            <button class="dropdown-item" onclick="showRefreshSettingsModal()" title="刷新频率设置">
-                                <i class="bi bi-clock"></i> 刷新频率设置
+                            <button class="dropdown-item d-flex align-items-center" onclick="showRefreshSettingsModal()" title="刷新频率设置">
+                                <i class="bi bi-clock me-2"></i>
+                                <span>刷新频率设置</span>
                             </button>
                         </li>
-                        <li><hr class="dropdown-divider"></li>
                         <!-- 添加直播间 -->
                         <li>
-                            <button class="dropdown-item" onclick="modalManager.showAddModal()" title="添加直播间">
-                                <i class="bi bi-plus-lg"></i> 添加直播间
+                            <button class="dropdown-item d-flex align-items-center" onclick="modalManager.showAddModal()" title="添加直播间">
+                                <i class="bi bi-plus-lg me-2"></i>
+                                <span>添加新直播间</span>
                             </button>
                         </li>
                     </ul>
@@ -790,13 +792,14 @@
             // 更新UI状态
             const toggleBtn = document.getElementById('autoUpdateToggle');
             if (toggleBtn) {
-                toggleBtn.innerHTML = isRunning ? 
-                    '<i class="bi bi-pause-circle"></i> 停止自动更新' : 
-                    '<i class="bi bi-play-circle"></i> 启动自动更新';
-                
-                toggleBtn.className = isRunning ? 
-                    'btn btn-danger btn-sm' : 
-                    'btn btn-success btn-sm';
+                // 保持统一样式，只更新图标和文本
+                if (isRunning) {
+                    toggleBtn.innerHTML = '<i class="bi bi-pause-circle me-2"></i><span>停止自动更新</span>';
+                } else {
+                    toggleBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i><span>启动自动更新</span>';
+                }
+                // 保持dropdown-item样式不变
+                toggleBtn.className = 'dropdown-item d-flex align-items-center';
             }
             
             // 显示状态提示
@@ -804,18 +807,6 @@
             if (statusText) {
                 statusText.textContent = isRunning ? '自动更新已启动' : '自动更新已停止';
                 statusText.className = isRunning ? 'text-success' : 'text-muted';
-            }
-            
-            // 更新图标指示器
-            const statusIcon = document.getElementById('autoUpdateStatusIcon');
-            if (statusIcon) {
-                if (isRunning) {
-                    statusIcon.className = 'bi bi-play-circle text-success me-2';
-                    statusIcon.title = '自动更新已启动';
-                } else {
-                    statusIcon.className = 'bi bi-pause-circle text-muted me-2';
-                    statusIcon.title = '自动更新已停止';
-                }
             }
         }
         

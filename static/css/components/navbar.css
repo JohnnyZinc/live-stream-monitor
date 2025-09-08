@@ -86,10 +86,50 @@
     border-top: 1px solid var(--border-color);
 }
 
+/* 下拉菜单选中项样式 */
+.dropdown-item.active,
+.dropdown-item:active {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* 统一下拉菜单项样式 */
+.dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-color);
+    white-space: nowrap;
+}
+
+.dropdown-item i {
+    width: 16px;
+    text-align: center;
+}
+
 /* 刷新指示器样式 */
 #refreshIndicator {
-    border-color: var(--primary-color);
-    border-width: 2px;
+    display: flex;
+    align-items: center;
+}
+
+#refreshIndicator .bi {
+    font-size: 1rem;
+    color: var(--primary-color);
+}
+
+/* 刷新动画 */
+@keyframes rotateRefresh {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.refresh-animation {
+    animation: rotateRefresh 1s linear infinite;
 }
 
 /* Auto update status text */
