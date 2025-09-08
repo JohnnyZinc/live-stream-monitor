@@ -162,11 +162,8 @@ cython_debug/
 # VS Code
 .vscode/
 
-# 数据缓存目录
-data/cache/
-
-# 本地配置文件
-data/douyin_config.json
+# 数据目录
+data/
 
 # 系统文件
 .DS_Store
