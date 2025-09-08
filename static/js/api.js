@@ -146,4 +146,18 @@ class APIManager {
             body: JSON.stringify({ api_url: apiUrl })
         });
     }
+    
+    static async getRefreshSettings() {
+        return await this.fetchWithErrorHandling('/get_refresh_settings');
+    }
+    
+    static async saveRefreshSettings(refreshInterval) {
+        return await this.fetchWithErrorHandling('/save_refresh_settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ refresh_interval: refreshInterval })
+        });
+    }
 }

@@ -8,6 +8,27 @@ class TimerService {
         this.updateListeners = [];
     }
 
+    // 从后端加载刷新设置
+    async loadRefreshSettings() {
+        try {
+            const response = await APIManager.getRefreshSettings();
+            if (response.success) {
+                // 将分钟转换为毫秒
+                this.updateInterval = response.settings.refresh_interval * 60 * 1000;
+                console.log("已加载刷新频率设置:", response.settings.refresh_interval, "分钟");
+                
+                // 如果服务正在运行，重新启动以应用新的间隔
+                if (this.isRunning) {
+                    this.start();
+                }
+            } else {
+                console.warn("加载刷新频率设置失败:", response.error);
+            }
+        } catch (error) {
+            console.warn("加载刷新频率设置出错:", error);
+        }
+    }
+
     // 添加更新监听器
     addUpdateListener(callback) {
         this.updateListeners.push(callback);
@@ -175,9 +196,26 @@ class TimerService {
         }
     }
 
-    // 设置更新间隔
-    setInterval(interval) {
-        this.updateInterval = interval;
+    // 设置更新间隔（分钟）
+    async setRefreshInterval(minutes) {
+        // 验证输入
+        if (!Number.isInteger(minutes) || minutes <= 0) {
+            throw new Error("刷新频率必须是正整数");
+        }
+        
+        this.updateInterval = minutes * 60 * 1000; // 转换为毫秒
+        
+        // 保存到后端
+        try {
+            const response = await APIManager.saveRefreshSettings(minutes);
+            if (!response.success) {
+                throw new Error(response.error || "保存设置失败");
+            }
+        } catch (error) {
+            console.error("保存刷新频率设置失败:", error);
+            throw error;
+        }
+        
         // 如果正在运行，重新启动以应用新的间隔
         if (this.isRunning) {
             this.start();

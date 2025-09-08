@@ -14,6 +14,7 @@ DATA_DIR = os.path.join(os.path.dirname(__file__), 'data')
 CACHE_DIR = os.path.join(DATA_DIR, 'cache')
 ROOMS_FILE = os.path.join(DATA_DIR, 'rooms_data.json')
 GROUPS_FILE = os.path.join(DATA_DIR, 'groups_data.json')
+REFRESH_SETTINGS_FILE = os.path.join(DATA_DIR, 'refresh_settings.json')
 
 # 抖音API配置文件路径
 DOUYIN_CONFIG_FILE = os.path.join(DATA_DIR, 'douyin_config.json')
@@ -70,6 +71,48 @@ def load_douyin_config():
     }
     save_douyin_config(default_config)
     return default_config
+
+
+def load_refresh_settings():
+    """从文件中加载刷新频率设置"""
+    if os.path.exists(REFRESH_SETTINGS_FILE):
+        try:
+            with open(REFRESH_SETTINGS_FILE, 'r', encoding='utf-8') as f:
+                data = json.load(f)
+                # 验证数据格式
+                if isinstance(data, dict) and 'refresh_interval' in data:
+                    interval = data['refresh_interval']
+                    # 验证间隔是正整数（分钟）
+                    if isinstance(interval, int) and interval > 0:
+                        return data
+        except Exception:
+            pass
+    
+    # 默认设置（10分钟）
+    default_settings = {
+        "refresh_interval": 10  # 分钟
+    }
+    save_refresh_settings(default_settings)
+    return default_settings
+
+
+def save_refresh_settings(settings):
+    """保存刷新频率设置到文件"""
+    try:
+        # 验证设置格式
+        if not isinstance(settings, dict) or 'refresh_interval' not in settings:
+            raise ValueError("Invalid settings format")
+        
+        interval = settings['refresh_interval']
+        # 验证间隔是正整数（分钟）
+        if not isinstance(interval, int) or interval <= 0:
+            raise ValueError("Refresh interval must be a positive integer")
+        
+        with open(REFRESH_SETTINGS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(settings, f, ensure_ascii=False, indent=2)
+    except Exception as e:
+        print(f"保存刷新频率设置失败: {e}")
+        raise
 
 def save_douyin_config(config):
     """保存抖音API配置到文件"""
@@ -531,6 +574,47 @@ def save_douyin_config_endpoint():
         return jsonify({
             'success': True,
             'config': config
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+@app.route('/get_refresh_settings')
+def get_refresh_settings():
+    """获取刷新频率设置"""
+    try:
+        settings = load_refresh_settings()
+        return jsonify({
+            'success': True,
+            'settings': settings
+        })
+    except Exception as e:
+        return jsonify({'error': str(e)})
+
+
+@app.route('/save_refresh_settings', methods=['POST'])
+def save_refresh_settings_endpoint():
+    """保存刷新频率设置"""
+    try:
+        data = request.get_json()
+        refresh_interval = data.get('refresh_interval')
+        
+        # 验证输入
+        if refresh_interval is None:
+            return jsonify({'error': '刷新频率不能为空'})
+        
+        if not isinstance(refresh_interval, int) or refresh_interval <= 0:
+            return jsonify({'error': '刷新频率必须是正整数'})
+        
+        settings = {
+            'refresh_interval': refresh_interval
+        }
+        
+        save_refresh_settings(settings)
+        
+        return jsonify({
+            'success': True,
+            'settings': settings
         })
     except Exception as e:
         return jsonify({'error': str(e)})
