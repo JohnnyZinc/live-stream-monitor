@@ -43,8 +43,11 @@
                     <i class="bi bi-plus-lg"></i>
                 </button>
             </div>
-            <div class="ms-2">
-                <small id="autoUpdateStatus" class="text-muted">自动更新已停止</small>
+            <div class="ms-2 d-flex align-items-center">
+                <small id="autoUpdateStatus" class="text-muted me-2">自动更新已停止</small>
+                <div id="refreshIndicator" class="spinner-border spinner-border-sm d-none" role="status" style="width: 1rem; height: 1rem;">
+                    <span class="visually-hidden">加载中...</span>
+                </div>
             </div>
         </div>
     </nav>
@@ -586,6 +589,12 @@
         
         // 后台更新房间信息（混合模式）
         async function updateRoomsInBackground() {
+            // 显示刷新指示器
+            const refreshIndicator = document.getElementById('refreshIndicator');
+            if (refreshIndicator) {
+                refreshIndicator.classList.remove('d-none');
+            }
+            
             try {
                 console.log("开始后台增量更新直播间信息...");
                 
@@ -639,6 +648,11 @@
                 
             } catch (error) {
                 console.error("后台更新出错:", error);
+            } finally {
+                // 隐藏刷新指示器
+                if (refreshIndicator) {
+                    refreshIndicator.classList.add('d-none');
+                }
             }
         }
         
@@ -697,9 +711,14 @@
         // 手动触发更新
         async function manualUpdate() {
             const updateBtn = document.getElementById('manualUpdateBtn');
+            const refreshIndicator = document.getElementById('refreshIndicator');
             if (updateBtn) {
                 updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 更新中...';
                 updateBtn.disabled = true;
+            }
+            // 显示刷新指示器
+            if (refreshIndicator) {
+                refreshIndicator.classList.remove('d-none');
             }
             
             try {
@@ -750,6 +769,10 @@
                 if (updateBtn) {
                     updateBtn.innerHTML = '<i class="bi bi-arrow-clockwise"></i> 立即更新';
                     updateBtn.disabled = false;
+                }
+                // 隐藏刷新指示器
+                if (refreshIndicator) {
+                    refreshIndicator.classList.add('d-none');
                 }
             }
         }

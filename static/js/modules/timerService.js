@@ -99,6 +99,12 @@ class TimerService {
 
     // 更新所有房间信息
     async updateAllRooms() {
+        // 显示刷新指示器
+        const refreshIndicator = document.getElementById('refreshIndicator');
+        if (refreshIndicator) {
+            refreshIndicator.classList.remove('d-none');
+        }
+        
         try {
             console.log("开始后台增量更新直播间信息...");
             
@@ -161,6 +167,11 @@ class TimerService {
             
         } catch (error) {
             console.error("后台更新出错:", error);
+        } finally {
+            // 隐藏刷新指示器
+            if (refreshIndicator) {
+                refreshIndicator.classList.add('d-none');
+            }
         }
     }
 
