@@ -2,10 +2,20 @@ name: Build and Publish Docker Image
 
 on:
   push:
-    branches: [ main, master ]
     tags: [ 'v*.*.*' ]
+  workflow_dispatch:
+    inputs:
+      test_build:
+        description: 'Test build (does not push to registry)'
+        required: false
+        default: false
+        type: boolean
   pull_request:
     branches: [ main, master ]
+    paths:
+      - '**'
+      - '!README.md'
+      - '!docs/**'
 
 env:
   REGISTRY: ghcr.io
@@ -26,7 +36,7 @@ jobs:
       uses: docker/setup-buildx-action@v3
 
     - name: Log in to Container Registry
-      if: github.event_name != 'pull_request'
+      if: github.event_name != 'pull_request' && github.event_name != 'workflow_dispatch' || github.event.inputs.test_build != 'true'
       uses: docker/login-action@v3
       with:
         registry: ${{ env.REGISTRY }}
@@ -51,7 +61,7 @@ jobs:
       with:
         context: .
         platforms: linux/amd64,linux/arm64
-        push: ${{ github.event_name != 'pull_request' }}
+        push: ${{ github.event_name != 'pull_request' && github.event_name != 'workflow_dispatch' || github.event.inputs.test_build != 'true' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
         cache-from: type=gha
