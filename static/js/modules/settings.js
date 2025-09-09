@@ -71,44 +71,10 @@ class SettingsManager {
             modal.hide();
             
             // 显示保存成功提示
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-success mb-0" role="alert">
-                    ${newPassword ? '密码修改成功' : '用户信息已保存'}
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(newPassword ? '密码修改成功' : '用户信息已保存', 'success');
         } catch (error) {
             // 显示保存失败提示
-            const toast = document.createElement('div');
-            toast.className = 'toast error';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-danger mb-0" role="alert">
-                    保存失败: ${error.message}
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(`保存失败: ${error.message}`, 'danger');
         }
     }
     
@@ -185,44 +151,10 @@ class SettingsManager {
             modal.hide();
             
             // 显示保存成功提示
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-success mb-0" role="alert">
-                    设置已保存
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast('设置已保存', 'success');
         } catch (error) {
             // 显示保存失败提示
-            const toast = document.createElement('div');
-            toast.className = 'toast error';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-danger mb-0" role="alert">
-                    保存失败: ${error.message}
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(`保存失败: ${error.message}`, 'danger');
         }
     }
     
@@ -259,44 +191,10 @@ class SettingsManager {
             modal.hide();
             
             // 显示保存成功提示
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-success mb-0" role="alert">
-                    API设置已保存
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast('API设置已保存', 'success');
         } catch (error) {
             // 显示保存失败提示
-            const toast = document.createElement('div');
-            toast.className = 'toast error';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-danger mb-0" role="alert">
-                    保存失败: ${error.message}
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(`保存失败: ${error.message}`, 'danger');
         }
     }
     
@@ -354,44 +252,10 @@ class SettingsManager {
             modal.hide();
             
             // 显示保存成功提示
-            const toast = document.createElement('div');
-            toast.className = 'toast success';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-success mb-0" role="alert">
-                    刷新频率已设置为 ${interval} 分钟
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(`刷新频率已设置为 ${interval} 分钟`, 'success');
         } catch (error) {
             // 显示保存失败提示
-            const toast = document.createElement('div');
-            toast.className = 'toast error';
-            toast.style.cssText = `
-                position: fixed;
-                top: 70px;
-                right: 20px;
-                z-index: 9999;
-                pointer-events: none;
-                animation: slideIn 0.3s ease-in-out;
-            `;
-            toast.innerHTML = `
-                <div class="alert alert-danger mb-0" role="alert">
-                    保存失败: ${error.message}
-                </div>
-            `;
-            
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+            Utils.showToast(`保存失败: ${error.message}`, 'danger');
         }
     }
 }

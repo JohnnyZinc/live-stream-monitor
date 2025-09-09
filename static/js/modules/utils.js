@@ -2,13 +2,16 @@
 class Utils {
     // 显示提示框
     static showToast(message, type = 'info') {
+        // 映射类型到新的CSS类名
+        const typeClassMap = {
+            'success': 'toast-success',
+            'danger': 'toast-error',
+            'info': 'toast-info'
+        };
+        
         const toast = document.createElement('div');
-        toast.className = 'toast';
-        toast.innerHTML = `
-            <div class="alert alert-${type} mb-0" role="alert">
-                ${message}
-            </div>
-        `;
+        toast.className = `toast ${typeClassMap[type] || 'toast-info'}`;
+        toast.textContent = message;
         
         document.body.appendChild(toast);
         
