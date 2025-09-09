@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, send_from_directory
 import os
 from tools.cache_manager import clear_old_cache
 
@@ -32,6 +32,11 @@ def index():
     else:
         # 如果用户未登录，显示登录页面
         return render_template('login.html')
+
+@app.route('/static/js/i18n/<lang>.json')
+def language_file(lang):
+    """Serve language files"""
+    return send_from_directory('static/js/i18n', f'{lang}.json')
 
 if __name__ == '__main__':
     # 启动时清理过期缓存

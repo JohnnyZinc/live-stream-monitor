@@ -1,0 +1,96 @@
+{
+  "common": {
+    "appTitle": "Live Collection",
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "edit": "Edit",
+    "add": "Add",
+    "close": "Close",
+    "success": "Operation successful",
+    "error": "Operation failed",
+    "warning": "Warning"
+  },
+  "navigation": {
+    "home": "Home",
+    "settings": "Settings",
+    "profile": "Profile",
+    "logout": "Logout",
+    "admin": "Admin Console",
+    "addGroup": "Add New Live Room"
+  },
+  "rooms": {
+    "title": "Live Rooms",
+    "empty": "No live rooms",
+    "emptyDescription": "Click the \"Add Live Room\" button in the top right corner to start adding your desired live rooms",
+    "live": "Live",
+    "offline": "Offline",
+    "viewers": "Viewers",
+    "followers": "Followers",
+    "gotoLive": "Go to Live Room"
+  },
+  "modals": {
+    "addRoom": {
+      "title": "Add Live Room",
+      "placeholder": "Please enter the live room link",
+      "button": "Add"
+    },
+    "settings": {
+      "title": "Settings",
+      "autoUpdate": "Auto Update",
+      "darkMode": "Dark Mode",
+      "language": "Language Settings",
+      "douyinApi": "Douyin API Settings",
+      "douyinApiUrl": "Douyin API URL",
+      "douyinApiPlaceholder": "Please enter the Douyin API base URL",
+      "douyinApiDefault": "Default: https://douyin.wtf",
+      "refreshFrequency": "Refresh Frequency Settings",
+      "refreshFrequencyLabel": "Refresh Frequency (minutes)",
+      "refreshFrequencyPlaceholder": "Please enter refresh frequency (minutes)",
+      "refreshFrequencyHelp": "Please enter a positive integer, e.g.: 5, 10, 15, 30"
+    },
+    "userInfo": {
+      "title": "User Information",
+      "username": "Username",
+      "avatar": "User Avatar",
+      "changeAvatar": "Change Avatar",
+      "newPassword": "New Password",
+      "passwordPlaceholder": "Leave blank to keep unchanged",
+      "passwordHint": "Password must be at least 6 characters",
+      "confirmPassword": "Confirm New Password",
+      "confirmPasswordPlaceholder": "Enter new password again"
+    },
+    "admin": {
+      "title": "Admin Console",
+      "registrationControl": "Registration Control",
+      "allowRegistration": "Allow New User Registration",
+      "userManagement": "User Management",
+      "addUser": "Add User",
+      "username": "Username",
+      "role": "Role",
+      "createTime": "Create Time",
+      "actions": "Actions",
+      "saveSettings": "Save Settings"
+    },
+    "groups": {
+      "all": "All Following",
+      "live": "Live",
+      "offline": "Offline",
+      "special": "Special Follow"
+    }
+  },
+  "toasts": {
+    "roomAdded": "Live room added successfully",
+    "roomRemoved": "Live room deleted successfully",
+    "updateStarted": "Starting manual update of live room information...",
+    "updateCompleted": "Live room information update completed"
+  },
+  "buttons": {
+    "startAutoUpdate": "Start Auto Update",
+    "stopAutoUpdate": "Stop Auto Update",
+    "manualUpdate": "Manual Update Now",
+    "addRoom": "Add New Live Room"
+  }
+}

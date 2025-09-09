@@ -21,6 +21,10 @@ class SettingsManager {
         const savedApiUrl = localStorage.getItem('douyin_api_url') || '';
         document.getElementById('settingsDouyinApiUrl').value = savedApiUrl;
         
+        // 从本地存储加载语言设置
+        const savedLanguage = localStorage.getItem('language') || CONFIG.I18N.DEFAULT_LANGUAGE;
+        document.getElementById('settingsLanguage').value = savedLanguage;
+        
         // 从服务器加载刷新频率设置
         this.loadRefreshSettingsForModal();
         
@@ -51,6 +55,7 @@ class SettingsManager {
         const apiUrl = document.getElementById('settingsDouyinApiUrl').value.trim();
         const intervalInput = document.getElementById('settingsRefreshInterval');
         const intervalValue = intervalInput.value.trim();
+        const language = document.getElementById('settingsLanguage').value;
         
         // 验证刷新频率
         let interval = null;
@@ -75,6 +80,13 @@ class SettingsManager {
                 localStorage.removeItem('douyin_api_url');
             }
             
+            // 保存语言设置
+            if (language && CONFIG.I18N.SUPPORTED_LANGUAGES.includes(language)) {
+                await i18n.switchLanguage(language);
+                // 立即应用翻译到所有带有data-i18n属性的元素
+                applyTranslations();
+            }
+            
             // 保存刷新频率设置
             if (interval) {
                 const refreshResponse = await APIManager.saveRefreshSettings(interval);
@@ -89,10 +101,10 @@ class SettingsManager {
             modal.hide();
             
             // 显示保存成功提示
-            Utils.showToast('设置已保存', 'success');
+            Utils.showToast(i18n.t('common.success'), 'success');
         } catch (error) {
             // 显示保存失败提示
-            Utils.showToast(`保存失败: ${error.message}`, 'danger');
+            Utils.showToast(`${i18n.t('common.error')}: ${error.message}`, 'danger');
         }
     }
     

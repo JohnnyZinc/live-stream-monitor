@@ -1,0 +1,96 @@
+{
+  "common": {
+    "appTitle": "ライブコレクション",
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "confirm": "確認",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "close": "閉じる",
+    "success": "操作成功",
+    "error": "操作失敗",
+    "warning": "警告"
+  },
+  "navigation": {
+    "home": "ホーム",
+    "settings": "設定",
+    "profile": "プロフィール",
+    "logout": "ログアウト",
+    "admin": "管理者コンソール",
+    "addGroup": "新しいライブ配信を追加"
+  },
+  "rooms": {
+    "title": "ライブ配信",
+    "empty": "ライブ配信がありません",
+    "emptyDescription": "右上の「ライブ配信を追加」ボタンをクリックして、好きなライブ配信を追加してください",
+    "live": "ライブ中",
+    "offline": "オフライン",
+    "viewers": "視聴者数",
+    "followers": "フォロワー数",
+    "gotoLive": "ライブ配信に移動"
+  },
+  "modals": {
+    "addRoom": {
+      "title": "ライブ配信を追加",
+      "placeholder": "ライブ配信のリンクを入力してください",
+      "button": "追加"
+    },
+    "settings": {
+      "title": "設定",
+      "autoUpdate": "自動更新",
+      "darkMode": "ダークモード",
+      "language": "言語設定",
+      "douyinApi": "Douyin API設定",
+      "douyinApiUrl": "Douyin API URL",
+      "douyinApiPlaceholder": "Douyin APIのベースURLを入力してください",
+      "douyinApiDefault": "デフォルト: https://douyin.wtf",
+      "refreshFrequency": "更新頻度設定",
+      "refreshFrequencyLabel": "更新頻度（分）",
+      "refreshFrequencyPlaceholder": "更新頻度（分）を入力してください",
+      "refreshFrequencyHelp": "正の整数を入力してください 例：5、10、15、30"
+    },
+    "userInfo": {
+      "title": "ユーザー情報",
+      "username": "ユーザー名",
+      "avatar": "ユーザーアバター",
+      "changeAvatar": "アバターを変更",
+      "newPassword": "新しいパスワード",
+      "passwordPlaceholder": "空白のままにして変更しない",
+      "passwordHint": "パスワードは6文字以上でなければなりません",
+      "confirmPassword": "新しいパスワードの確認",
+      "confirmPasswordPlaceholder": "新しいパスワードを再入力"
+    },
+    "admin": {
+      "title": "管理者コンソール",
+      "registrationControl": "登録制御",
+      "allowRegistration": "新規ユーザー登録を許可",
+      "userManagement": "ユーザー管理",
+      "addUser": "ユーザーを追加",
+      "username": "ユーザー名",
+      "role": "役割",
+      "createTime": "作成時間",
+      "actions": "操作",
+      "saveSettings": "設定を保存"
+    },
+    "groups": {
+      "all": "すべてのフォロー",
+      "live": "ライブ中",
+      "offline": "オフライン",
+      "special": "特別フォロー"
+    }
+  },
+  "toasts": {
+    "roomAdded": "ライブ配信が正常に追加されました",
+    "roomRemoved": "ライブ配信が正常に削除されました",
+    "updateStarted": "ライブ配信情報の手動更新を開始...",
+    "updateCompleted": "ライブ配信情報の更新が完了しました"
+  },
+  "buttons": {
+    "startAutoUpdate": "自動更新を開始",
+    "stopAutoUpdate": "自動更新を停止",
+    "manualUpdate": "今すぐ手動更新",
+    "addRoom": "新しいライブ配信を追加"
+  }
+}

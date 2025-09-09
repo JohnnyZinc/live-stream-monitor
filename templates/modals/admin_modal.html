@@ -4,7 +4,7 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h5 class="modal-title">
-                    <i class="bi bi-gear-fill me-2"></i> 管理员控制台
+                    <i class="bi bi-gear-fill me-2"></i> <span data-i18n="modals.admin.title">管理员控制台</span>
                 </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
@@ -12,10 +12,10 @@
                 <!-- Registration control -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">注册控制</h6>
+                        <h6 class="mb-0" data-i18n="modals.admin.registrationControl">注册控制</h6>
                         <div class="form-check form-switch">
                             <input class="form-check-input" type="checkbox" id="allowRegistrationSwitch">
-                            <label class="form-check-label" for="allowRegistrationSwitch">
+                            <label class="form-check-label" for="allowRegistrationSwitch" data-i18n="modals.admin.allowRegistration">
                                 允许新用户注册
                             </label>
                         </div>
@@ -25,9 +25,9 @@
                 <!-- User management -->
                 <div class="card mb-3">
                     <div class="card-header d-flex justify-content-between align-items-center">
-                        <h6 class="mb-0">用户管理</h6>
+                        <h6 class="mb-0" data-i18n="modals.admin.userManagement">用户管理</h6>
                         <button type="button" class="btn btn-sm btn-primary" onclick="AdminManager.showCreateUserModal()">
-                            <i class="bi bi-person-plus"></i> 添加用户
+                            <i class="bi bi-person-plus"></i> <span data-i18n="modals.admin.addUser">添加用户</span>
                         </button>
                     </div>
                     <div class="card-body">
@@ -35,10 +35,10 @@
                             <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>用户名</th>
-                                        <th>角色</th>
-                                        <th>创建时间</th>
-                                        <th>操作</th>
+                                        <th data-i18n="modals.admin.username">用户名</th>
+                                        <th data-i18n="modals.admin.role">角色</th>
+                                        <th data-i18n="modals.admin.createTime">创建时间</th>
+                                        <th data-i18n="modals.admin.actions">操作</th>
                                     </tr>
                                 </thead>
                                 <tbody id="usersTableBody">
@@ -50,8 +50,8 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">关闭</button>
-                <button type="button" class="btn btn-primary" onclick="AdminManager.saveAdminConfig()">保存设置</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.close">关闭</button>
+                <button type="button" class="btn btn-primary" onclick="AdminManager.saveAdminConfig()" data-i18n="modals.admin.saveSettings">保存设置</button>
             </div>
         </div>
     </div>

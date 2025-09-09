@@ -30,13 +30,21 @@ const CONFIG = {
         adminCreateUser: '/admin/users',
         adminUpdateUser: '/admin/users',
         adminDeleteUser: '/admin/users',
-        adminUpdateConfig: '/admin/config'
+        adminUpdateConfig: '/admin/config',
+        // i18n
+        getLanguage: '/get_language'
     },
     
     // 图片配置
     IMAGES: {
         defaultCover: '/static/images/default-cover.svg',
         defaultAvatar: '/static/images/default-avatar.svg'
+    },
+    
+    // i18n配置
+    I18N: {
+        DEFAULT_LANGUAGE: 'zh-CN',
+        SUPPORTED_LANGUAGES: ['zh-CN', 'en', 'zh-TW', 'ja']
     },
     
     // 当前用户

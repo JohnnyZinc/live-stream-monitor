@@ -1,0 +1,96 @@
+{
+  "common": {
+    "appTitle": "聚合直播",
+    "loading": "載入中...",
+    "save": "儲存",
+    "cancel": "取消",
+    "confirm": "確認",
+    "delete": "刪除",
+    "edit": "編輯",
+    "add": "新增",
+    "close": "關閉",
+    "success": "操作成功",
+    "error": "操作失敗",
+    "warning": "警告"
+  },
+  "navigation": {
+    "home": "首頁",
+    "settings": "設定",
+    "profile": "個人資料",
+    "logout": "登出",
+    "admin": "管理員控制台",
+    "addGroup": "新增直播間"
+  },
+  "rooms": {
+    "title": "直播間",
+    "empty": "暫無直播間",
+    "emptyDescription": "點擊右上角的「新增直播間」按鈕開始新增您想要的直播間",
+    "live": "直播中",
+    "offline": "未開播",
+    "viewers": "觀眾數",
+    "followers": "關注數",
+    "gotoLive": "立即前往直播間"
+  },
+  "modals": {
+    "addRoom": {
+      "title": "新增直播間",
+      "placeholder": "請輸入直播間連結",
+      "button": "新增"
+    },
+    "settings": {
+      "title": "設定",
+      "autoUpdate": "自動更新",
+      "darkMode": "深色模式",
+      "language": "語言設定",
+      "douyinApi": "抖音API設定",
+      "douyinApiUrl": "抖音API地址",
+      "douyinApiPlaceholder": "請輸入抖音API基礎地址",
+      "douyinApiDefault": "預設使用 https://douyin.wtf",
+      "refreshFrequency": "更新頻率設定",
+      "refreshFrequencyLabel": "更新頻率（分鐘）",
+      "refreshFrequencyPlaceholder": "請輸入更新頻率（分鐘）",
+      "refreshFrequencyHelp": "請輸入正整數，例如：5、10、15、30"
+    },
+    "userInfo": {
+      "title": "用戶資訊",
+      "username": "用戶名",
+      "avatar": "用戶頭像",
+      "changeAvatar": "更換頭像",
+      "newPassword": "新密碼",
+      "passwordPlaceholder": "留空表示不修改",
+      "passwordHint": "密碼長度至少為6位",
+      "confirmPassword": "確認新密碼",
+      "confirmPasswordPlaceholder": "再次輸入新密碼"
+    },
+    "admin": {
+      "title": "管理員控制台",
+      "registrationControl": "註冊控制",
+      "allowRegistration": "允許新用戶註冊",
+      "userManagement": "用戶管理",
+      "addUser": "新增用戶",
+      "username": "用戶名",
+      "role": "角色",
+      "createTime": "建立時間",
+      "actions": "操作",
+      "saveSettings": "儲存設定"
+    },
+    "groups": {
+      "all": "全部關注",
+      "live": "直播中",
+      "offline": "未開播",
+      "special": "特別關注"
+    }
+  },
+  "toasts": {
+    "roomAdded": "直播間新增成功",
+    "roomRemoved": "直播間刪除成功",
+    "updateStarted": "開始手動更新直播間資訊...",
+    "updateCompleted": "直播間資訊更新完成"
+  },
+  "buttons": {
+    "startAutoUpdate": "啟動自動更新",
+    "stopAutoUpdate": "停止自動更新",
+    "manualUpdate": "立即手動更新",
+    "addRoom": "新增直播間"
+  }
+}

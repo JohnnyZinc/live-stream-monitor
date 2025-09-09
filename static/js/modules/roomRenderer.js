@@ -13,8 +13,9 @@ class RoomRenderer {
             // 清空容器内容，只保留空状态元素
             this.container.innerHTML = '';
             this.container.appendChild(this.emptyState);
-            // 确保空状态显示
+            // 确保空状态显示并应用翻译
             this.emptyState.style.display = 'block';
+            this.applyEmptyStateTranslations();
         } else {
             this.container.classList.remove('empty');
             // 隐藏空状态
@@ -53,6 +54,20 @@ class RoomRenderer {
             
             // 渲染房间卡片
             this.container.innerHTML = sortedRooms.map(room => this.createRoomCard(room)).join('');
+        }
+    }
+    
+    // 应用空状态翻译
+    applyEmptyStateTranslations() {
+        const emptyStateTitle = document.getElementById('emptyStateTitle');
+        const emptyStateDescription = document.getElementById('emptyStateDescription');
+        
+        if (emptyStateTitle) {
+            emptyStateTitle.textContent = i18n.t('rooms.empty');
+        }
+        
+        if (emptyStateDescription) {
+            emptyStateDescription.textContent = i18n.t('rooms.emptyDescription');
         }
     }
     

@@ -1,0 +1,96 @@
+{
+  "common": {
+    "appTitle": "聚合直播",
+    "loading": "加载中...",
+    "save": "保存",
+    "cancel": "取消",
+    "confirm": "确认",
+    "delete": "删除",
+    "edit": "编辑",
+    "add": "添加",
+    "close": "关闭",
+    "success": "操作成功",
+    "error": "操作失败",
+    "warning": "警告"
+  },
+  "navigation": {
+    "home": "首页",
+    "settings": "设置",
+    "profile": "个人资料",
+    "logout": "退出登录",
+    "admin": "管理员控制台",
+    "addGroup": "添加新直播间"
+  },
+  "rooms": {
+    "title": "直播间",
+    "empty": "暂无直播间",
+    "emptyDescription": "点击右上角的\"添加直播间\"按钮开始添加你想要的直播间",
+    "live": "直播中",
+    "offline": "未开播",
+    "viewers": "观众数",
+    "followers": "关注数",
+    "gotoLive": "立即前往直播间"
+  },
+  "modals": {
+    "addRoom": {
+      "title": "添加直播间",
+      "placeholder": "请输入直播间链接",
+      "button": "添加"
+    },
+    "settings": {
+      "title": "设置",
+      "autoUpdate": "自动更新",
+      "darkMode": "深色模式",
+      "language": "语言设置",
+      "douyinApi": "抖音API设置",
+      "douyinApiUrl": "抖音API地址",
+      "douyinApiPlaceholder": "请输入抖音API基础地址",
+      "douyinApiDefault": "默认使用 https://douyin.wtf",
+      "refreshFrequency": "刷新频率设置",
+      "refreshFrequencyLabel": "刷新频率（分钟）",
+      "refreshFrequencyPlaceholder": "请输入刷新频率（分钟）",
+      "refreshFrequencyHelp": "请输入正整数，例如：5、10、15、30"
+    },
+    "userInfo": {
+      "title": "用户信息",
+      "username": "用户名",
+      "avatar": "用户头像",
+      "changeAvatar": "更换头像",
+      "newPassword": "新密码",
+      "passwordPlaceholder": "留空表示不修改",
+      "passwordHint": "密码长度至少为6位",
+      "confirmPassword": "确认新密码",
+      "confirmPasswordPlaceholder": "再次输入新密码"
+    },
+    "admin": {
+      "title": "管理员控制台",
+      "registrationControl": "注册控制",
+      "allowRegistration": "允许新用户注册",
+      "userManagement": "用户管理",
+      "addUser": "添加用户",
+      "username": "用户名",
+      "role": "角色",
+      "createTime": "创建时间",
+      "actions": "操作",
+      "saveSettings": "保存设置"
+    },
+    "groups": {
+      "all": "全部关注",
+      "live": "直播中",
+      "offline": "未开播",
+      "special": "特别关注"
+    }
+  },
+  "toasts": {
+    "roomAdded": "直播间添加成功",
+    "roomRemoved": "直播间删除成功",
+    "updateStarted": "开始手动更新直播间信息...",
+    "updateCompleted": "直播间信息更新完成"
+  },
+  "buttons": {
+    "startAutoUpdate": "启动自动更新",
+    "stopAutoUpdate": "停止自动更新",
+    "manualUpdate": "立即手动更新",
+    "addRoom": "添加新直播间"
+  }
+}

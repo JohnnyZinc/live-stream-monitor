@@ -3,6 +3,7 @@ class StateManager {
     constructor() {
         this.rooms = [];
         this.cachedRooms = [];
+        // Initialize with empty groups, they will be properly named when i18n is ready
         this.groups = {
             "全部关注": { type: "system", rooms: [] },
             "直播中": { type: "system", rooms: [] },

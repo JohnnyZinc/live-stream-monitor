@@ -68,12 +68,12 @@ class RoomOperations {
         setTimeout(() => {
             // 使用自定义确认模态框替换原生confirm
             if (typeof AuthManager !== 'undefined') {
-                AuthManager.showConfirmModal(`确定要取消关注 "${anchorName}" 的直播间吗？`, () => {
+                AuthManager.showConfirmModal(i18n.t('modals.confirm.removeRoom', { anchorName: anchorName }), () => {
                     roomManager.deleteRoom(roomUrl);
                 });
             } else {
                 // Fallback到原生confirm
-                if (confirm(`确定要取消关注 "${anchorName}" 的直播间吗？`)) {
+                if (confirm(i18n.t('modals.confirm.removeRoom', { anchorName: anchorName }))) {
                     roomManager.deleteRoom(roomUrl);
                 }
             }
@@ -84,12 +84,12 @@ class RoomOperations {
     static confirmDeleteRoom(roomUrl, anchorName) {
         // 使用自定义确认模态框替换原生confirm
         if (typeof AuthManager !== 'undefined') {
-            AuthManager.showConfirmModal(`确定要取消关注 "${anchorName}" 的直播间吗？`, () => {
+            AuthManager.showConfirmModal(i18n.t('modals.confirm.removeRoom', { anchorName: anchorName }), () => {
                 roomManager.deleteRoom(roomUrl);
             });
         } else {
             // Fallback到原生confirm
-            if (confirm(`确定要取消关注 "${anchorName}" 的直播间吗？`)) {
+            if (confirm(i18n.t('modals.confirm.removeRoom', { anchorName: anchorName }))) {
                 roomManager.deleteRoom(roomUrl);
             }
         }

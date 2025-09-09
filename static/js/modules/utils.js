@@ -24,7 +24,11 @@ class Utils {
         // 设置消息内容
         const toastBody = toast.querySelector('#toastBody');
         if (toastBody) {
-            toastBody.textContent = message;
+            // 如果消息是翻译键，则进行翻译
+            const translatedMessage = typeof message === 'string' && message.startsWith('toasts.') 
+                ? i18n.t(message) 
+                : message;
+            toastBody.textContent = translatedMessage;
         }
         
         // 设置类型样式
@@ -203,9 +207,9 @@ class Utils {
         if (toggleBtn) {
             // 保持统一样式，只更新图标和文本
             if (isRunning) {
-                toggleBtn.innerHTML = '<i class="bi bi-pause-circle me-2"></i><span>停止自动更新</span>';
+                toggleBtn.innerHTML = `<i class="bi bi-pause-circle me-2"></i><span>${i18n.t('buttons.stopAutoUpdate')}</span>`;
             } else {
-                toggleBtn.innerHTML = '<i class="bi bi-play-circle me-2"></i><span>启动自动更新</span>';
+                toggleBtn.innerHTML = `<i class="bi bi-play-circle me-2"></i><span>${i18n.t('buttons.startAutoUpdate')}</span>`;
             }
             // 保持dropdown-item样式不变
             toggleBtn.className = 'dropdown-item d-flex align-items-center';
@@ -214,12 +218,12 @@ class Utils {
         // 显示状态提示
         const statusText = document.getElementById('autoUpdateStatus');
         if (statusText) {
-            statusText.textContent = isRunning ? '自动更新已启动' : '自动更新已停止';
+            statusText.textContent = isRunning ? i18n.t('buttons.startAutoUpdate') : i18n.t('buttons.stopAutoUpdate');
             statusText.className = isRunning ? 'text-success' : 'text-muted';
         }
         
         // 显示提示框
-        this.showToast(isRunning ? '自动更新已启动' : '自动更新已停止', isRunning ? 'success' : 'info');
+        this.showToast(isRunning ? 'toasts.updateStarted' : 'toasts.updateCompleted', isRunning ? 'success' : 'info');
     }
     
     // 手动触发更新
@@ -227,7 +231,7 @@ class Utils {
         const updateBtn = document.getElementById('manualUpdateBtn');
         const refreshIndicator = document.getElementById('refreshIndicator');
         if (updateBtn) {
-            updateBtn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> 更新中...';
+            updateBtn.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> ${i18n.t('common.loading')}`;
             updateBtn.disabled = true;
         }
         // 显示刷新指示器
@@ -237,7 +241,7 @@ class Utils {
         
         try {
             // 显示开始更新提示
-            this.showToast('开始手动更新直播间信息...', 'info');
+            this.showToast('toasts.updateStarted', 'info');
             
             // 检查RoomOperations是否已定义
             if (typeof RoomOperations !== 'undefined' && typeof RoomOperations.updateRoomsInBackground === 'function') {
@@ -247,12 +251,12 @@ class Utils {
                 if (typeof timerService !== 'undefined' && typeof timerService.updateAllRooms === 'function') {
                     await timerService.updateAllRooms();
                 } else {
-                    throw new Error('更新服务未定义');
+                    throw new Error(i18n.t('common.error'));
                 }
             }
             
             // 显示更新成功提示
-            this.showToast('直播间信息更新完成', 'success');
+            this.showToast('toasts.updateCompleted', 'success');
         } catch (error) {
             console.error('手动更新失败:', error);
             
@@ -260,7 +264,7 @@ class Utils {
             this.showToast(`更新失败: ${error.message}`, 'danger');
         } finally {
             if (updateBtn) {
-                updateBtn.innerHTML = '<i class="bi bi-arrow-clockwise me-2"></i><span>立即手动更新</span>';
+                updateBtn.innerHTML = `<i class="bi bi-arrow-clockwise me-2"></i><span>${i18n.t('buttons.manualUpdate')}</span>`;
                 updateBtn.disabled = false;
             }
             // 隐藏刷新指示器

@@ -11,15 +11,21 @@ class GroupUI {
         // 清空现有菜单项
         groupMenu.innerHTML = '';
         
-        // 定义系统分组的显示顺序
-        const systemGroupOrder = ["全部关注", "特别关注", "直播中", "未开播"];
+        // 定义系统分组的显示顺序和对应的翻译键
+        const systemGroups = [
+            { name: "全部关注", key: "modals.groups.all" },
+            { name: "特别关注", key: "modals.groups.special" },
+            { name: "直播中", key: "modals.groups.live" },
+            { name: "未开播", key: "modals.groups.offline" }
+        ];
         
         // 先添加指定顺序的系统分组
-        systemGroupOrder.forEach(groupName => {
-            if (groups[groupName]) {
+        systemGroups.forEach(group => {
+            if (groups[group.name]) {
+                const displayName = i18n.t(group.key);
                 const li = document.createElement('li');
-                li.innerHTML = `<a class="dropdown-item ${currentGroup === groupName ? 'active' : ''}" 
-                                  href="#" onclick="GroupManager.selectGroup('${groupName}')">${groupName}</a>`;
+                li.innerHTML = `<a class="dropdown-item ${currentGroup === group.name ? 'active' : ''}" 
+                                  href="#" onclick="GroupManager.selectGroup('${group.name}')">${displayName}</a>`;
                 groupMenu.appendChild(li);
             }
         });
@@ -27,7 +33,8 @@ class GroupUI {
         // 再添加其他自定义分组
         Object.keys(groups).forEach(groupName => {
             // 跳过已添加的系统分组
-            if (!systemGroupOrder.includes(groupName)) {
+            const isSystemGroup = systemGroups.some(group => group.name === groupName);
+            if (!isSystemGroup) {
                 const li = document.createElement('li');
                 li.innerHTML = `<a class="dropdown-item ${currentGroup === groupName ? 'active' : ''}" 
                                   href="#" onclick="GroupManager.selectGroup('${groupName}')">${groupName}</a>`;
@@ -42,11 +49,18 @@ class GroupUI {
         
         // 添加创建新分组选项
         const createLi = document.createElement('li');
-        createLi.innerHTML = '<a class="dropdown-item" href="#" onclick="GroupManager.showCreateGroupModal()"><i class="bi bi-plus-circle"></i> 创建新分组</a>';
+        createLi.innerHTML = '<a class="dropdown-item" href="#" onclick="GroupManager.showCreateGroupModal()"><i class="bi bi-plus-circle"></i> ' + i18n.t('modals.addRoom.title') + '</a>';
         groupMenu.appendChild(createLi);
         
         // 更新当前分组显示
-        document.getElementById('currentGroupName').textContent = currentGroup;
+        const groupKeyMap = {
+            "全部关注": "modals.groups.all",
+            "直播中": "modals.groups.live",
+            "未开播": "modals.groups.offline",
+            "特别关注": "modals.groups.special"
+        };
+        const translationKey = groupKeyMap[currentGroup] || "navigation.home";
+        document.getElementById('currentGroupName').textContent = i18n.t(translationKey);
     }
     
     // 显示创建分组模态框
@@ -66,20 +80,23 @@ class GroupUI {
         let checkboxesHtml = '';
         
         // 定义系统分组的显示顺序（在设置分组中只显示特别关注）
-        const systemGroupOrder = ["特别关注"];
+        const systemGroups = [
+            { name: "特别关注", key: "modals.groups.special" }
+        ];
         
         // 先添加指定顺序的系统分组
-        systemGroupOrder.forEach(groupName => {
-            if (groups[groupName] && (groups[groupName].type === 'system' || groupName === '特别关注')) {
-                const isChecked = groups[groupName].rooms.includes(roomUrl);
+        systemGroups.forEach(group => {
+            if (groups[group.name] && (groups[group.name].type === 'system' || group.name === '特别关注')) {
+                const isChecked = groups[group.name].rooms.includes(roomUrl);
+                const displayName = i18n.t(group.key);
                 checkboxesHtml += `
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" 
-                               id="group_${groupName}" 
-                               value="${groupName}" 
+                               id="group_${group.name}" 
+                               value="${group.name}" 
                                ${isChecked ? 'checked' : ''}>
-                        <label class="form-check-label" for="group_${groupName}">
-                            ${groupName}
+                        <label class="form-check-label" for="group_${group.name}">
+                            ${displayName}
                         </label>
                     </div>
                 `;

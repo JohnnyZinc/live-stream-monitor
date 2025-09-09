@@ -3,19 +3,19 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title">添加直播间</h5>
+                <h5 class="modal-title" data-i18n="modals.addRoom.title">添加直播间</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
-                    <label class="form-label">直播间URL</label>
+                    <label class="form-label" data-i18n="modals.addRoom.placeholder">直播间URL</label>
                     <input type="text" class="form-control" id="modalRoomUrl"
                            placeholder="支持：斗鱼、虎牙、哔哩哔哩、抖音直播间链接">
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
-                <button type="button" class="btn btn-primary" onclick="roomManager.addRoom(document.getElementById('modalRoomUrl').value.trim())">添加</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" data-i18n="common.cancel">取消</button>
+                <button type="button" class="btn btn-primary" onclick="roomManager.addRoom(document.getElementById('modalRoomUrl').value.trim())" data-i18n="modals.addRoom.button">添加</button>
             </div>
         </div>
     </div>

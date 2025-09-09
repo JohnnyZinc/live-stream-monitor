@@ -28,7 +28,7 @@ class GroupManager {
         
         if (!groupName) {
             // 使用Toast通知替换alert
-            Utils.showToast('请输入分组名称', 'danger');
+            Utils.showToast(i18n.t('modals.createGroup.emptyName'), 'danger');
             return;
         }
         
@@ -47,11 +47,11 @@ class GroupManager {
                 }
             } else {
                 // 使用Toast通知替换alert
-                Utils.showToast(response.error || '创建分组失败', 'danger');
+                Utils.showToast(response.error || i18n.t('modals.createGroup.createFailed'), 'danger');
             }
         } catch (error) {
             // 使用Toast通知替换alert
-            Utils.showToast('创建分组失败: ' + error.message, 'danger');
+            Utils.showToast(i18n.t('modals.createGroup.createFailed') + ': ' + error.message, 'danger');
         }
     }
     
@@ -107,7 +107,7 @@ class GroupManager {
             
         } catch (error) {
             // 使用Toast通知替换alert
-            Utils.showToast('保存分组设置失败: ' + error.message, 'danger');
+            Utils.showToast(i18n.t('modals.groupAssignment.saveFailed') + ': ' + error.message, 'danger');
         }
     }
     
