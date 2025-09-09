@@ -9,18 +9,52 @@ class Utils {
             'info': 'toast-info'
         };
         
-        const toast = document.createElement('div');
-        toast.className = `toast ${typeClassMap[type] || 'toast-info'}`;
-        toast.textContent = message;
+        // 使用预定义的toast模板
+        const toastTemplate = document.getElementById('toastTemplate');
+        if (!toastTemplate) {
+            console.error('Toast template not found');
+            return;
+        }
         
-        document.body.appendChild(toast);
+        // 克隆模板创建新的toast
+        const toast = toastTemplate.cloneNode(true);
+        toast.id = ''; // 移除id以避免重复
+        toast.classList.remove('d-none'); // 显示toast
         
-        // 3秒后自动移除
-        setTimeout(() => {
-            if (toast.parentElement) {
-                toast.remove();
-            }
-        }, 3000);
+        // 设置消息内容
+        const toastBody = toast.querySelector('#toastBody');
+        if (toastBody) {
+            toastBody.textContent = message;
+        }
+        
+        // 设置类型样式
+        const typeClass = typeClassMap[type] || 'toast-info';
+        toast.classList.add(typeClass);
+        
+        // 添加进入动画类
+        toast.classList.add('toast-enter');
+        
+        // 添加到toast容器
+        const toastContainer = document.querySelector('.toast-container');
+        if (toastContainer) {
+            toastContainer.appendChild(toast);
+        } else {
+            document.body.appendChild(toast);
+        }
+        
+        // 初始化Bootstrap toast
+        const bsToast = new bootstrap.Toast(toast, {
+            delay: 3000,
+            autohide: true
+        });
+        
+        // 监听隐藏事件，移除元素
+        toast.addEventListener('hidden.bs.toast', function () {
+            toast.remove();
+        });
+        
+        // 显示toast
+        bsToast.show();
     }
     // 初始化主题切换功能
     static initThemeToggle() {
