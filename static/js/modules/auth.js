@@ -13,6 +13,8 @@ class AuthManager {
             if (response.authenticated) {
                 // User is logged in, display username and admin menu
                 this.updateUserUI(response.user_id, response.is_admin);
+                // Set current user in config
+                CONFIG.CURRENT_USER = response.user_id;
             } else {
                 // User is not logged in, redirect to login page
                 window.location.href = '/login';

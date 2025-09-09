@@ -252,4 +252,15 @@ class APIManager {
             body: JSON.stringify({ allow_registration: allowRegistration })
         });
     }
+
+    // 用户密码更新API
+    static async updatePassword(newPassword) {
+        return await this.fetchWithErrorHandling(`${CONFIG.API_ENDPOINTS.adminUpdateUser}/${CONFIG.CURRENT_USER}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ password: newPassword })
+        });
+    }
 }

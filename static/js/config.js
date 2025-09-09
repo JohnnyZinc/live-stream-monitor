@@ -37,7 +37,10 @@ const CONFIG = {
     IMAGES: {
         defaultCover: '/static/images/default-cover.svg',
         defaultAvatar: '/static/images/default-avatar.svg'
-    }
+    },
+    
+    // 当前用户
+    CURRENT_USER: ''
 };
 
 // 全局状态管理
