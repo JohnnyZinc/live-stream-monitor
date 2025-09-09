@@ -1,5 +1,59 @@
 # Docker 部署说明
 
+## 发布到 GitHub Container Registry (GHCR)
+
+### 自动构建和发布
+项目已配置 GitHub Actions，当代码推送到 `main` 分支时，会自动构建并发布 Docker 镜像到 GitHub Container Registry。
+
+### 手动触发构建
+1. 访问仓库的 Actions 页面
+2. 选择 "Build and Publish Docker Image" 工作流
+3. 点击 "Run workflow"
+
+### 镜像标签策略
+- `latest` - 最新版本（main分支）
+- `v1.0.0` - 版本标签
+- `1.0` - 主版本
+- `pr-123` - PR版本
+
+## 使用 GHCR 镜像
+
+### 1. 登录到 GitHub Container Registry
+```bash
+echo $GITHUB_TOKEN | docker login ghcr.io -u your-username --password-stdin
+```
+
+### 2. 拉取镜像
+```bash
+docker pull ghcr.io/your-username/live-collection:latest
+```
+
+### 3. 运行容器
+```bash
+docker run -d \
+  --name live-collection \
+  -p 5000:5000 \
+  -v $(pwd)/data:/app/data \
+  ghcr.io/your-username/live-collection:latest
+```
+
+### 4. 使用 docker-compose
+更新 `docker-compose.yml` 文件：
+```yaml
+services:
+  live-collection:
+    image: ghcr.io/your-username/live-collection:latest
+    container_name: live-collection-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+    environment:
+      - FLASK_ENV=production
+      - SECRET_KEY=your-production-secret-key-here
+    restart: unless-stopped
+```
+
 ## 快速开始
 
 ### 1. 安装 Docker
