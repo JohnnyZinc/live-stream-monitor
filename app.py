@@ -41,4 +41,4 @@ def language_file(lang):
 if __name__ == '__main__':
     # 启动时清理过期缓存
     clear_old_cache('admin')  # 清理管理员缓存
-    app.run(debug=True, host='127.0.0.1', port=5000)
+    app.run(debug=True, host='0.0.0.0', port=5000)
