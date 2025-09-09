@@ -34,10 +34,16 @@ class Utils {
         // 添加进入动画类
         toast.classList.add('toast-enter');
         
-        // 添加到toast容器
+        // 添加到toast容器的第一个位置，实现新通知在底部的效果
         const toastContainer = document.querySelector('.toast-container');
         if (toastContainer) {
-            toastContainer.appendChild(toast);
+            // 如果容器中有其他toast，添加到第一个位置
+            if (toastContainer.firstChild) {
+                toastContainer.insertBefore(toast, toastContainer.firstChild);
+            } else {
+                // 如果容器为空，直接添加
+                toastContainer.appendChild(toast);
+            }
         } else {
             document.body.appendChild(toast);
         }
