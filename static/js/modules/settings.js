@@ -38,7 +38,8 @@ class SettingsManager {
     // 更换用户头像
     static changeUserAvatar() {
         // 这里可以实现头像上传功能
-        alert('头像更换功能开发中...');
+        // 使用Toast通知替换alert
+        Utils.showToast('头像更换功能开发中...', 'info');
     }
     
     // 保存用户信息
@@ -48,12 +49,14 @@ class SettingsManager {
         
         // 验证密码
         if (newPassword && newPassword.length < 6) {
-            alert('密码长度至少为6位');
+            // 使用Toast通知替换alert
+            Utils.showToast('密码长度至少为6位', 'danger');
             return;
         }
         
         if (newPassword && newPassword !== confirmPassword) {
-            alert('两次输入的密码不一致');
+            // 使用Toast通知替换alert
+            Utils.showToast('两次输入的密码不一致', 'danger');
             return;
         }
         
@@ -120,7 +123,8 @@ class SettingsManager {
         if (intervalValue) {
             interval = parseInt(intervalValue);
             if (isNaN(interval) || interval <= 0) {
-                alert('刷新频率必须是正整数');
+                // 使用Toast通知替换alert
+                Utils.showToast('刷新频率必须是正整数', 'danger');
                 return;
             }
         }
@@ -227,13 +231,15 @@ class SettingsManager {
         
         // 输入验证
         if (!intervalValue) {
-            alert('请输入刷新频率');
+            // 使用Toast通知替换alert
+            Utils.showToast('请输入刷新频率', 'danger');
             return;
         }
         
         const interval = parseInt(intervalValue);
         if (isNaN(interval) || interval <= 0) {
-            alert('刷新频率必须是正整数');
+            // 使用Toast通知替换alert
+            Utils.showToast('刷新频率必须是正整数', 'danger');
             return;
         }
         

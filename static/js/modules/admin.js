@@ -25,7 +25,8 @@ class AdminManager {
             }
         } catch (error) {
             console.error('加载管理员数据失败:', error);
-            alert('加载管理员数据失败');
+            // 使用Toast通知替换alert
+            Utils.showToast('加载管理员数据失败', 'danger');
         }
     }
     
@@ -112,31 +113,36 @@ class AdminManager {
         const isAdmin = document.getElementById('newUserIsAdmin').checked;
         
         if (!username || !password || !confirmPassword) {
-            alert('请填写所有必填项');
+            // 使用Toast通知替换alert
+            Utils.showToast('请填写所有必填项', 'danger');
             return;
         }
         
         if (password.length < 6) {
-            alert('密码长度至少为6位');
+            // 使用Toast通知替换alert
+            Utils.showToast('密码长度至少为6位', 'danger');
             return;
         }
         
         if (password !== confirmPassword) {
-            alert('两次输入的密码不一致');
+            // 使用Toast通知替换alert
+            Utils.showToast('两次输入的密码不一致', 'danger');
             return;
         }
         
         try {
             const response = await APIManager.adminCreateUser(username, password, isAdmin);
             if (response.success) {
-                alert('用户创建成功');
+                // 使用Toast通知替换alert
+                Utils.showToast('用户创建成功');
                 bootstrap.Modal.getInstance(document.getElementById('createUserModal')).hide();
                 
                 // 重新加载管理员数据
                 this.loadAdminData();
             }
         } catch (error) {
-            alert('创建用户失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('创建用户失败: ' + error.message, 'danger');
         }
     }
     
@@ -169,12 +175,14 @@ class AdminManager {
         const isAdmin = document.getElementById('editIsAdmin').checked;
         
         if (!username) {
-            alert('用户名不能为空');
+            // 使用Toast通知替换alert
+            Utils.showToast('用户名不能为空', 'danger');
             return;
         }
         
         if (newPassword && newPassword.length < 6) {
-            alert('密码长度至少为6位');
+            // 使用Toast通知替换alert
+            Utils.showToast('密码长度至少为6位', 'danger');
             return;
         }
         
@@ -185,27 +193,46 @@ class AdminManager {
             // 关闭模态框
             bootstrap.Modal.getInstance(document.getElementById('editUserModal')).hide();
             
-            alert('用户权限更新成功');
+            // 使用Toast通知替换alert
+            Utils.showToast('用户权限更新成功');
             
             // 重新加载管理员数据
             this.loadAdminData();
         } catch (error) {
-            alert('更新用户权限失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('更新用户权限失败: ' + error.message, 'danger');
         }
     }
     
     // 删除用户
     static deleteUser(username) {
-        if (!confirm(`确定要删除用户 "${username}" 吗？`)) {
-            return;
+        // 使用自定义确认模态框替换原生confirm
+        if (typeof AuthManager !== 'undefined') {
+            AuthManager.showConfirmModal(`确定要删除用户 "${username}" 吗？`, () => {
+                APIManager.adminDeleteUser(username).then(() => {
+                    // 使用Toast通知替换alert
+                    Utils.showToast('用户删除成功');
+                    this.loadAdminData();
+                }).catch(error => {
+                    // 使用Toast通知替换alert
+                    Utils.showToast('删除用户失败: ' + error.message, 'danger');
+                });
+            });
+        } else {
+            // Fallback到原生confirm
+            if (!confirm(`确定要删除用户 "${username}" 吗？`)) {
+                return;
+            }
+            
+            APIManager.adminDeleteUser(username).then(() => {
+                // 使用Toast通知替换alert
+                Utils.showToast('用户删除成功');
+                this.loadAdminData();
+            }).catch(error => {
+                // 使用Toast通知替换alert
+                Utils.showToast('删除用户失败: ' + error.message, 'danger');
+            });
         }
-        
-        APIManager.adminDeleteUser(username).then(() => {
-            alert('用户删除成功');
-            this.loadAdminData();
-        }).catch(error => {
-            alert('删除用户失败: ' + error.message);
-        });
     }
     
     // 保存管理员配置
@@ -215,10 +242,12 @@ class AdminManager {
         try {
             const response = await APIManager.adminUpdateConfig(allowRegistration);
             if (response.success) {
-                alert('配置保存成功');
+                // 使用Toast通知替换alert
+                Utils.showToast('配置保存成功');
             }
         } catch (error) {
-            alert('保存配置失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('保存配置失败: ' + error.message, 'danger');
         }
     }
 }

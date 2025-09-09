@@ -82,7 +82,8 @@ class GroupManager {
         const groupName = groupNameInput.value.trim();
         
         if (!groupName) {
-            alert('请输入分组名称');
+            // 使用Toast通知替换alert
+            Utils.showToast('请输入分组名称', 'danger');
             return;
         }
         
@@ -100,10 +101,12 @@ class GroupManager {
                     this.showGroupAssignmentModal(roomUrl);
                 }
             } else {
-                alert(response.error || '创建分组失败');
+                // 使用Toast通知替换alert
+                Utils.showToast(response.error || '创建分组失败', 'danger');
             }
         } catch (error) {
-            alert('创建分组失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('创建分组失败: ' + error.message, 'danger');
         }
     }
     
@@ -224,7 +227,8 @@ class GroupManager {
             modal.hide();
             
         } catch (error) {
-            alert('保存分组设置失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('保存分组设置失败: ' + error.message, 'danger');
         }
     }
 }

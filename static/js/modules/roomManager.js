@@ -41,7 +41,8 @@ class RoomManager {
     // 添加房间
     async addRoom(roomUrl) {
         if (!roomUrl || !roomUrl.includes('://')) {
-            alert('请输入完整的直播间URL地址');
+            // 使用Toast通知替换alert
+            Utils.showToast('请输入完整的直播间URL地址', 'danger');
             return;
         }
         
@@ -62,11 +63,13 @@ class RoomManager {
                 modal.hide();
                 document.getElementById('modalRoomUrl').value = '';
             } else {
-                alert(data.error);
+                // 使用Toast通知替换alert
+                Utils.showToast(data.error, 'danger');
             }
             
         } catch (error) {
-            alert('添加失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('添加失败: ' + error.message, 'danger');
         }
     }
     
@@ -93,7 +96,8 @@ class RoomManager {
                 Utils.showToast('已取消关注', 'success');
             }
         } catch (error) {
-            alert('删除失败: ' + error.message);
+            // 使用Toast通知替换alert
+            Utils.showToast('删除失败: ' + error.message, 'danger');
         }
     }
 }
