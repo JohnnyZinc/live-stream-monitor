@@ -54,11 +54,20 @@ body {
 /* 提示框样式 */
 .toast {
     position: fixed;
+    top: 70px;
+    right: 20px;
     z-index: 9999;
-    animation: slideInRight 0.3s ease-in-out;
     min-width: 250px;
     max-width: 400px;
-    cursor: pointer;
+    display: block !important;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    padding: 10px;
+    border-radius: 5px;
+    color: #721c24;
+    font-family: 'Microsoft YaHei', sans-serif;
+    font-size: 14px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 .toast.toast-exit {

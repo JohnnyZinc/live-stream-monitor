@@ -1,7 +1,7 @@
 /* 基础动画 */
 @keyframes slideInRight {
     from {
-        transform: translateX(100%);
+        transform: translateX(20px);
         opacity: 0;
     }
     to {
