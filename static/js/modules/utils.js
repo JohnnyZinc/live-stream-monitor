@@ -54,6 +54,39 @@ class Utils {
             autohide: true
         });
         
+        // 添加悬停事件监听器：鼠标悬停时暂停自动隐藏
+        let hideTimeout;
+        toast.addEventListener('mouseenter', function () {
+            // 暂停自动隐藏
+            bsToast._clearTimeout();
+            if (hideTimeout) {
+                clearTimeout(hideTimeout);
+            }
+        });
+        
+        // 添加鼠标离开事件监听器：鼠标离开时恢复自动隐藏
+        toast.addEventListener('mouseleave', function () {
+            // 恢复自动隐藏
+            hideTimeout = setTimeout(function () {
+                // 添加退出动画类
+                toast.classList.add('toast-exit');
+                // 动画结束后隐藏toast
+                setTimeout(function () {
+                    bsToast.hide();
+                }, 300);
+            }, 3000);
+        });
+        
+        // 添加点击事件监听器：点击时立即隐藏
+        toast.addEventListener('click', function () {
+            // 添加退出动画类
+            toast.classList.add('toast-exit');
+            // 动画结束后隐藏toast
+            setTimeout(function () {
+                bsToast.hide();
+            }, 300);
+        });
+        
         // 监听隐藏事件，移除元素
         toast.addEventListener('hidden.bs.toast', function () {
             toast.remove();

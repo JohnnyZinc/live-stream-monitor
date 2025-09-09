@@ -95,6 +95,22 @@ body {
     animation: toastEnter 0.3s ease-out forwards;
 }
 
+/* Toast退出动画 */
+@keyframes slideOutRight {
+    from {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%);
+    }
+}
+
+.toast.toast-exit {
+    animation: slideOutRight 0.3s ease-in-out forwards;
+}
+
 /* 成功提示框 */
 .toast-success {
     background-color: #7B24FF;
