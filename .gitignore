@@ -162,7 +162,7 @@ cython_debug/
 # VS Code
 .vscode/
 
-# 数据目录
+# 整个数据目录都不追踪（用户数据属于隐私）
 data/
 
 # 系统文件

@@ -1,0 +1,23 @@
+<!-- Refresh settings modal -->
+<div class="modal fade" id="refreshSettingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">刷新频率设置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Refresh frequency (minutes)</label>
+                    <input type="number" class="form-control" id="refreshInterval"
+                           placeholder="Please enter refresh frequency (minutes)" min="1" step="1">
+                    <div class="form-text">Please enter positive integers, e.g., 5, 10, 15, 30</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="SettingsManager.saveRefreshSettings()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

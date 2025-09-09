@@ -1,0 +1,23 @@
+<!-- API settings modal -->
+<div class="modal fade" id="apiSettingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">抖音API设置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">抖音API地址</label>
+                    <input type="text" class="form-control" id="douyinApiUrl"
+                           placeholder="请输入抖音API基础地址">
+                    <div class="form-text">默认使用 https://douyin.wtf</div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="SettingsManager.saveApiSettings()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

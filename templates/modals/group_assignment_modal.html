@@ -1,0 +1,29 @@
+<!-- Group assignment modal -->
+<div class="modal fade" id="groupAssignmentModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">设置分组</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="groupAssignmentRoomUrl">
+                <div class="mb-3">
+                    <label class="form-label">Select groups (multiple selection allowed)</label>
+                    <div id="groupCheckboxes">
+                        <!-- Group checkboxes will be generated dynamically here -->
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <button type="button" class="btn btn-outline-primary btn-sm" onclick="GroupManager.showCreateGroupModalFromAssignment()">
+                        <i class="bi bi-plus-circle"></i> 创建新分组
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="GroupManager.saveGroupAssignment()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

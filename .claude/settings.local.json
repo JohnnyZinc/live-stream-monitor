@@ -39,7 +39,10 @@
       "Bash(dir /A /S)",
       "Bash(dir /a/s)",
       "Bash(Get-ChildItem -Recurse)",
-      "Bash(del cache_manager.py config_manager.py data_handler.py group_manager.py user_manager.py utils.py)"
+      "Bash(del cache_manager.py config_manager.py data_handler.py group_manager.py user_manager.py utils.py)",
+      "Bash(powershell:*)",
+      "Bash(dir routes)",
+      "Bash(del routesroom_routes.py)"
     ],
     "deny": [],
     "ask": []

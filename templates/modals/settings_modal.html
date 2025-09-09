@@ -1,0 +1,38 @@
+<!-- Settings modal -->
+<div class="modal fade" id="settingsModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">设置</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Douyin API settings -->
+                <div class="mb-4">
+                    <h6 class="mb-3">抖音API设置</h6>
+                    <div class="mb-3">
+                        <label class="form-label">抖音API地址</label>
+                        <input type="text" class="form-control" id="settingsDouyinApiUrl"
+                               placeholder="请输入抖音API基础地址">
+                        <div class="form-text">默认使用 https://douyin.wtf</div>
+                    </div>
+                </div>
+                
+                <!-- Refresh frequency settings -->
+                <div class="mb-3">
+                    <h6 class="mb-3">刷新频率设置</h6>
+                    <div class="mb-3">
+                        <label class="form-label">Refresh frequency (minutes)</label>
+                        <input type="number" class="form-control" id="settingsRefreshInterval"
+                               placeholder="Please enter refresh frequency (minutes)" min="1" step="1">
+                        <div class="form-text">Please enter positive integers, e.g., 5, 10, 15, 30</div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" onclick="SettingsManager.saveSettings()">保存</button>
+            </div>
+        </div>
+    </div>
+</div>

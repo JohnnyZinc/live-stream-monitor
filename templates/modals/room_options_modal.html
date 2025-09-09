@@ -1,0 +1,34 @@
+<!-- Room options dialog -->
+<div class="modal fade" id="roomOptionsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-sm">
+        <div class="modal-content">
+            <div class="modal-header text-center py-3 border-bottom-0">
+                <div class="w-100">
+                    <img id="roomOptionsAvatar" src="" alt="主播头像" class="rounded-circle mb-2" style="width: 48px; height: 48px; object-fit: cover;">
+                    <h5 class="modal-title w-100" id="roomOptionsTitle">直播间选项</h5>
+                </div>
+            </div>
+            <div class="modal-body text-center">
+                <input type="hidden" id="roomOptionsUrl">
+                <input type="hidden" id="roomOptionsAnchorName">
+                
+                <!-- Live cover -->
+                <div class="mb-3">
+                    <img id="roomOptionsCover" src="" alt="直播封面" class="img-fluid rounded" style="max-height: 200px; object-fit: cover;">
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="button" class="btn btn-outline-primary" onclick="RoomOperations.openGroupAssignmentFromOptions()">
+                        <i class="bi bi-folder-plus"></i> 设置分组
+                    </button>
+                    <button type="button" class="btn btn-outline-danger" onclick="RoomOperations.deleteRoomFromOptions()">
+                        <i class="bi bi-x-lg"></i> 取消关注
+                    </button>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+            </div>
+        </div>
+    </div>
+</div>
