@@ -1,0 +1,34 @@
+version: '3.8'
+
+services:
+  live-collection:
+    build: .
+    container_name: live-collection-app
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+      - SECRET_KEY=your-production-secret-key-here
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - live-collection-network
+
+networks:
+  live-collection-network:
+    driver: bridge
+
+volumes:
+  live-collection-data:
+    driver: local
+  live-collection-logs:
+    driver: local
