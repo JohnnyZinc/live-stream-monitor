@@ -42,7 +42,8 @@
       "Bash(del cache_manager.py config_manager.py data_handler.py group_manager.py user_manager.py utils.py)",
       "Bash(powershell:*)",
       "Bash(dir routes)",
-      "Bash(del routesroom_routes.py)"
+      "Bash(del routesroom_routes.py)",
+      "Read(//c/Users/Johnny/.claude/**)"
     ],
     "deny": [],
     "ask": []

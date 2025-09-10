@@ -17,7 +17,7 @@ const CONFIG = {
         createGroup: '/create_group',
         deleteGroup: '/delete_group',
         updateRoomGroups: '/update_room_groups',
-        incrementalUpdateAll: 'http://127.0.0.1:5000/incremental_update_all',
+        incrementalUpdateAll: '/incremental_update_all',
         // 用户认证
         login: '/login',
         register: '/register',
